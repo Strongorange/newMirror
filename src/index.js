@@ -7,12 +7,9 @@ import reset from "styled-reset";
 const GlobalStyle = createGlobalStyle`
   ${reset}
   
-  body {
-    background-color: black;
-    color: white
-  }
-
-
+ span {
+  font-size:40px;
+ }
 `;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
