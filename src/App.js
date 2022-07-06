@@ -13,8 +13,10 @@ const Outter = styled.div`
 `;
 
 const Container = styled.div`
-  width: 1024px;
-  height: 600px;
+  /* width: 1024px;
+  height: 600px; */
+  width: 100%;
+  height: 100%;
   background-color: black;
   color: white;
   display: flex;
@@ -22,6 +24,7 @@ const Container = styled.div`
   justify-content: flex-start;
   align-items: center;
   padding: 30px;
+  padding-bottom: 10px;
   box-sizing: border-box;
 `;
 
@@ -58,8 +61,9 @@ const GridContainer = styled.div`
       grid-row: 3 / -1;
     }
     &:nth-child(4) {
-      background-color: purple;
+      /* background-color: purple; */
       grid-row: 4 / -1;
+      margin-top: -30px;
     }
   }
 `;
@@ -73,7 +77,7 @@ const GridItem = styled.div`
 
   .clock-time {
     margin-top: 10px;
-    font-size: 40px;
+    font-size: 85px;
     font-weight: 800;
   }
 
@@ -186,13 +190,40 @@ const ScheduleItem = styled.div`
   }
 `;
 
+const PhotoContainer = styled.div`
+  display: flex;
+  width: 100%;
+  margin-top: -10px;
+`;
+
+const PhotoRow = styled.div`
+  display: flex;
+  width: 100%;
+  height: 200px;
+  justify-content: space-evenly;
+  /* background-color: teal; */
+`;
+
+const PhotoBox = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PhotoItem = styled.img`
+  width: 180px;
+  height: 180px;
+`;
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [latitude, setLatitude] = useState(35.95);
   const [longitude, setLongitude] = useState(126.71);
   const [forecasts, setForecasts] = useState(null);
-  const [messages, setMessages] = useState();
+  const [messages, setMessages] = useState(null);
   const [schedules, setSchedules] = useState(null);
+  const [gallery, setGallery] = useState(null);
   const [koreanTime, setKoreanTime] = useState();
   const [APIKEY, setAPIKEY] = useState(process.env.REACT_APP_APIKEY);
 
@@ -212,6 +243,11 @@ function App() {
       console.log("Current schedules: ", doc.data());
       setSchedules(doc.data().schedule);
     });
+    onSnapshot(doc(firestore, "mirror", "gallery"), (doc) => {
+      console.log("Current Gallery: ", doc.data());
+      setGallery(doc.data().photos);
+    });
+
     getWeather();
     setTimeout(() => setIsLoading(false), 2000);
   }, []);
@@ -219,6 +255,11 @@ function App() {
   useEffect(() => {
     console.log(schedules);
   }, [schedules]);
+
+  useEffect(() => {
+    console.log("gallery");
+    console.log(gallery);
+  }, [gallery]);
 
   return (
     <>
@@ -320,8 +361,18 @@ function App() {
                 </GridItem>
                 <GridItem className="item">
                   <SubTitleContainer className="weekly">
-                    <SubTitle>주간 날씨</SubTitle>
+                    <SubTitle>RUZA's PICK</SubTitle>
                     <Seperator />
+                    <PhotoContainer>
+                      <PhotoRow>
+                        <PhotoBox>
+                          <PhotoItem src={gallery[0]} />
+                        </PhotoBox>
+                        <PhotoBox>
+                          <PhotoItem src={gallery[1]} />
+                        </PhotoBox>
+                      </PhotoRow>
+                    </PhotoContainer>
                   </SubTitleContainer>
                 </GridItem>
               </GridContainer>
