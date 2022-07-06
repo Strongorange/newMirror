@@ -29,6 +29,7 @@ const TextContainer = styled.div`
   .hidden {
     animation-fill-mode: forwards;
     animation: ${fadeOut} 1s ease-in-out;
+    visibility: hidden;
   }
 `;
 
@@ -48,6 +49,7 @@ const Message = ({ forecasts, messages }) => {
   const [output, setOutput] = useState(null);
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(true);
+  const [fade, setFade] = useState(0);
 
   const getIsDay = () => {
     const curr = new Date();
@@ -86,9 +88,19 @@ const Message = ({ forecasts, messages }) => {
   useEffect(() => {
     getIsDay();
     let interval = setInterval(() => setTimer((timer) => timer + 1), 12000);
-    console.log(messages);
+
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    setIsActive((state) => true);
+    let fadeInter = setInterval(() => setFade((fade) => fade + 1), 10000);
+    return () => clearInterval(fadeInter);
+  }, [timer]);
+
+  useEffect(() => {
+    setIsActive((state) => false);
+  }, [fade]);
 
   return (
     <TextContainer>
