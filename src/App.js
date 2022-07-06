@@ -4,6 +4,7 @@ import { firestore } from "./firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import Clock from "react-live-clock";
 import { WaterOutline, SunnyOutline } from "react-ionicons";
+import Message from "./Message";
 
 const Outter = styled.div`
   display: flex;
@@ -29,10 +30,6 @@ const Container = styled.div`
 `;
 
 const Text = styled.span``;
-
-const Message = styled.span`
-  font-size: 60px;
-`;
 
 const GridContainer = styled.div`
   display: grid;
@@ -261,7 +258,6 @@ function App() {
   }, [schedules]);
 
   useEffect(() => {
-    console.log("gallery");
     console.log(gallery);
   }, [gallery]);
 
@@ -273,7 +269,10 @@ function App() {
             <Text>노루를 데려오는 중</Text>
           ) : (
             <>
-              <Message>{messages.always[0]}</Message>
+              <Message
+                forecasts={forecasts.current.weather[0].main}
+                messages={messages}
+              />
               <GridContainer>
                 <GridItem className="item">
                   <Clock
