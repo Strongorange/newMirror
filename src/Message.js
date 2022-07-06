@@ -1,6 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { HourglassOutline } from "react-ionicons";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+`;
+
+const fadeOut = keyframes`
+    0% {
+        opacity: 1;
+    }
+  
+    100% {
+        opacity: 0;
+    }
+  
+`;
+
+const TextContainer = styled.div`
+  .active {
+    animation: ${fadeIn} 1s ease-in-out;
+  }
+
+  .hidden {
+    animation-fill-mode: forwards;
+    animation: ${fadeOut} 1s ease-in-out;
+  }
+`;
 
 const Text = styled.span`
   font-size: 60px;
@@ -17,6 +47,7 @@ const Message = ({ forecasts, messages }) => {
   const [isDay, setIsDay] = useState(MORNING);
   const [output, setOutput] = useState(null);
   const [timer, setTimer] = useState(0);
+  const [isActive, setIsActive] = useState(true);
 
   const getIsDay = () => {
     const curr = new Date();
@@ -54,20 +85,17 @@ const Message = ({ forecasts, messages }) => {
 
   useEffect(() => {
     getIsDay();
+    let interval = setInterval(() => setTimer((timer) => timer + 1), 12000);
     console.log(messages);
-    let interval = setInterval(() => setTimer((timer) => timer + 1), 10000);
+    return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    getIsDay();
-  }, [timer]);
-
-  //   return <Text>hi</Text>;
-
   return (
-    <Text>
-      {output ? output[Math.floor(Math.random() * output.length)] : "hi"}
-    </Text>
+    <TextContainer>
+      <Text className={isActive ? "active" : "hidden"}>
+        {output ? output[Math.floor(Math.random() * output.length)] : "hi"}
+      </Text>
+    </TextContainer>
   );
 };
 

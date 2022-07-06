@@ -250,7 +250,9 @@ function App() {
       setGallery(doc.data().photos);
     });
     getWeather();
-    let timer = setInterval(() => getWeather(), 1800000);
+    let interval = setInterval(() => getWeather(), 1800000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -260,6 +262,11 @@ function App() {
   useEffect(() => {
     console.log(gallery);
   }, [gallery]);
+
+  useEffect(() => {
+    setIsLoading((state) => true);
+    setTimeout(() => setIsLoading((state) => false), 1000);
+  }, [messages]);
 
   return (
     <>
