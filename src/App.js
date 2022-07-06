@@ -23,7 +23,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 30px;
+  padding: 20px;
   padding-bottom: 10px;
   box-sizing: border-box;
 `;
@@ -50,6 +50,7 @@ const GridContainer = styled.div`
 
     &:nth-child(1) {
       grid-row: 1 / 3;
+      margin-top: 40px;
     }
 
     &:nth-child(2) {
@@ -59,6 +60,7 @@ const GridContainer = styled.div`
     &:nth-child(3) {
       /* background-color: green; */
       grid-row: 3 / -1;
+      margin-top: 40px;
     }
     &:nth-child(4) {
       /* background-color: purple; */
@@ -212,8 +214,8 @@ const PhotoBox = styled.div`
 `;
 
 const PhotoItem = styled.img`
-  width: 180px;
-  height: 180px;
+  width: 190px;
+  height: 190px;
 `;
 
 function App() {
@@ -228,10 +230,13 @@ function App() {
   const [APIKEY, setAPIKEY] = useState(process.env.REACT_APP_APIKEY);
 
   const getWeather = async () => {
+    setIsLoading((state) => (state = true));
     const response = await fetch(
       `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&exclude=alerts,minutely,hourly&appid=${APIKEY}&lang=kr`
     ).then((res) => res.json());
-    setForecasts(response);
+    setForecasts((state) => (state = response));
+    setTimeout(() => setIsLoading((state) => (state = false)), 3000);
+    console.log("weather active");
   };
 
   useEffect(() => {
@@ -247,9 +252,8 @@ function App() {
       console.log("Current Gallery: ", doc.data());
       setGallery(doc.data().photos);
     });
-
     getWeather();
-    setTimeout(() => setIsLoading(false), 2000);
+    let timer = setInterval(() => getWeather(), 1800000);
   }, []);
 
   useEffect(() => {
