@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { firestore } from "./firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import Clock from "react-live-clock";
+import { WaterOutline, SunnyOutline } from "react-ionicons";
 
 const Outter = styled.div`
   display: flex;
@@ -32,31 +33,69 @@ const Message = styled.span`
 
 const GridContainer = styled.div`
   display: grid;
-  width: 80%;
+  width: 100%;
   height: 100%;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  color: rgba(255, 255, 255, 0.8);
 
-  div {
+  .item {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
+    &:nth-child(1) {
+      grid-row: 1 / 3;
+    }
+
     &:nth-child(2) {
-      background-color: teal;
+      grid-row: 1 / 4;
+      /* background-color: teal; */
     }
     &:nth-child(3) {
-      background-color: green;
+      /* background-color: green; */
+      grid-row: 3 / -1;
     }
     &:nth-child(4) {
       background-color: purple;
+      grid-row: 4 / -1;
     }
   }
 `;
 
 const GridItem = styled.div`
-  background-color: tomato;
+  position: relative;
+
+  .clock-date {
+    font-size: 36px;
+  }
+
+  .clock-time {
+    margin-top: 10px;
+    font-size: 40px;
+    font-weight: 800;
+  }
+
+  .weather {
+    align-items: flex-end;
+  }
+
+  .schedule {
+    align-items: flex-start;
+  }
+
+  .weekly {
+    align-items: flex-end;
+  }
+`;
+
+const SubTitleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  position: absolute;
+  top: 10%;
 `;
 
 const SubTitle = styled.span`
@@ -65,18 +104,97 @@ const SubTitle = styled.span`
 `;
 
 const Seperator = styled.div`
-  width: 70%;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+`;
+
+const WeatherContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  width: 80%;
+`;
+
+const WeatherRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.8);
+  justify-content: space-evenly;
+  &:nth-child(1) {
+    /* background-color: brown; */
+    span {
+      font-size: 30px;
+      margin-bottom: -40px;
+    }
+  }
+  &:nth-child(2) {
+    /* background-color: green; */
+    span {
+      font-size: 60px;
+      font-weight: 800;
+    }
+    margin-bottom: -30px;
+  }
+  &:nth-child(3) {
+    /* background-color: blue; */
+  }
+`;
+
+const WeatherItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  gap: 10px;
+`;
+
+const WeatherIcon = styled.img`
+  width: 85px;
+  height: 100px;
+`;
+
+const ScheduleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 80%;
+  margin-top: 70px;
+  /* background-color: teal; */
+`;
+
+const ScheduleRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  color: rgba(255, 255, 255, 0.8);
+  justify-content: space-between;
+`;
+
+const ScheduleItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  gap: 10px;
+  span {
+    font-size: 24px;
+  }
 `;
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [latitude, setLatitude] = useState(35.95);
   const [longitude, setLongitude] = useState(126.71);
-  const [APIKEY, setAPIKEY] = useState(process.env.REACT_APP_APIKEY);
   const [forecasts, setForecasts] = useState(null);
   const [messages, setMessages] = useState();
+  const [schedules, setSchedules] = useState(null);
   const [koreanTime, setKoreanTime] = useState();
+  const [APIKEY, setAPIKEY] = useState(process.env.REACT_APP_APIKEY);
 
   const getWeather = async () => {
     const response = await fetch(
@@ -90,9 +208,17 @@ function App() {
       console.log("Current data: ", doc.data());
       setMessages(doc.data());
     });
+    onSnapshot(doc(firestore, "mirror", "schedules"), (doc) => {
+      console.log("Current schedules: ", doc.data());
+      setSchedules(doc.data().schedule);
+    });
     getWeather();
     setTimeout(() => setIsLoading(false), 2000);
   }, []);
+
+  useEffect(() => {
+    console.log(schedules);
+  }, [schedules]);
 
   return (
     <>
@@ -101,35 +227,106 @@ function App() {
           {isLoading ? (
             <Text>노루를 데려오는 중</Text>
           ) : (
-            <Message>{messages.always[0]}</Message>
+            <>
+              <Message>{messages.always[0]}</Message>
+              <GridContainer>
+                <GridItem className="item">
+                  <Clock
+                    format={`ddd, YYYY년 M월, D일`}
+                    locale="ko"
+                    timezone="Asia/Seoul"
+                    className="clock-date"
+                  />
+                  <Clock
+                    format={"hh:mm:ss"}
+                    interval={100}
+                    timezone={"Asia/Seoul"}
+                    ticking={true}
+                    className="clock-time"
+                  />
+                </GridItem>
+                <GridItem className="item">
+                  <SubTitleContainer className="weather">
+                    <SubTitle>군산</SubTitle>
+                    <Seperator />
+                  </SubTitleContainer>
+                  <WeatherContainer>
+                    <WeatherRow>
+                      <WeatherItem>
+                        <WaterOutline
+                          color={"#ababc8"}
+                          height="25px"
+                          width="25px"
+                        />
+                        <Text>{`${forecasts.current.humidity}`}%</Text>
+                      </WeatherItem>
+                      <WeatherItem>
+                        <SunnyOutline
+                          color={"#ababc8"}
+                          title={"uvi"}
+                          height="30px"
+                          width="35px"
+                        />
+                        <Text>{` ${forecasts.current.uvi}`}</Text>
+                      </WeatherItem>
+                    </WeatherRow>
+                    <WeatherRow>
+                      <WeatherItem>
+                        <WeatherIcon
+                          src={`http://openweathermap.org/img/wn/${forecasts.current.weather[0].icon}@2x.png`}
+                        />
+                        <Text>{`${forecasts.current.temp}°C`}</Text>
+                      </WeatherItem>
+                    </WeatherRow>
+                    <WeatherRow>
+                      <WeatherItem>
+                        <Text>체감온도</Text>
+                        <Text>{`${forecasts.current.feels_like}°C`}</Text>
+                      </WeatherItem>
+                    </WeatherRow>
+                  </WeatherContainer>
+                </GridItem>
+                <GridItem className="item">
+                  <SubTitleContainer className="schedule">
+                    <SubTitle>우리 일정!</SubTitle>
+                    <Seperator />
+                  </SubTitleContainer>
+                  <ScheduleContainer>
+                    {schedules !== null ? (
+                      schedules.map((c) => (
+                        <ScheduleRow>
+                          <ScheduleItem>
+                            <Text>{`${new Date(
+                              c.date.seconds * 1000
+                            ).getFullYear()}-${
+                              new Date(c.date.seconds * 1000).getMonth() + 1
+                            }-${new Date(
+                              c.date.seconds * 1000
+                            ).getDate()}`}</Text>
+                          </ScheduleItem>
+                          <ScheduleItem>
+                            <Text>{c.name}</Text>
+                          </ScheduleItem>
+                        </ScheduleRow>
+                      ))
+                    ) : (
+                      <ScheduleRow>
+                        <ScheduleItem>
+                          <Text>일정 없음!</Text>
+                        </ScheduleItem>
+                      </ScheduleRow>
+                    )}
+                  </ScheduleContainer>
+                </GridItem>
+                <GridItem className="item">
+                  <SubTitleContainer className="weekly">
+                    <SubTitle>주간 날씨</SubTitle>
+                    <Seperator />
+                  </SubTitleContainer>
+                </GridItem>
+              </GridContainer>
+            </>
           )}
-          <GridContainer>
-            <GridItem>
-              <Clock
-                format={`YYYY년 M월, D일`}
-                locale="ko"
-                timezone="Asia/Seoul"
-              />
-              <Clock
-                format={"hh:mm:ss"}
-                interval={100}
-                timezone={"Asia/Seoul"}
-                ticking={true}
-              />
-            </GridItem>
-            <GridItem>
-              <SubTitle>2</SubTitle>
-              <Seperator />
-            </GridItem>
-            <GridItem>
-              <SubTitle>3</SubTitle>
-              <Seperator />
-            </GridItem>
-            <GridItem>
-              <SubTitle>4</SubTitle>
-              <Seperator />
-            </GridItem>
-          </GridContainer>
         </Container>
       </Outter>
     </>

@@ -8,7 +8,7 @@ const GlobalStyle = createGlobalStyle`
   ${reset}
   
  span {
-  font-size:40px;
+  font-size:26px;
  }
 `;
 
