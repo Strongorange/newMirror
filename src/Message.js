@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { keyframes } from "styled-components";
 
 const fadeIn = keyframes`
@@ -17,6 +17,7 @@ const fadeOut = keyframes`
   
     100% {
         opacity: 0;
+
     }
   
 `;
@@ -29,7 +30,6 @@ const TextContainer = styled.div`
   .hidden {
     animation-fill-mode: forwards;
     animation: ${fadeOut} 1s ease-in-out;
-    visibility: hidden;
   }
 `;
 
@@ -49,7 +49,7 @@ const Message = ({ forecasts, messages }) => {
   const [output, setOutput] = useState(null);
   const [timer, setTimer] = useState(0);
   const [isActive, setIsActive] = useState(true);
-  const [fade, setFade] = useState(0);
+  const messageTxt = useRef();
 
   const getIsDay = () => {
     const curr = new Date();
@@ -63,25 +63,307 @@ const Message = ({ forecasts, messages }) => {
     const hour = kr_curr.getHours();
     if (hour >= 0 && hour <= 4) {
       setIsDay((state) => (state = MIDNIGHT));
-      setOutput(
-        (state) => (state = [...messages.always, ...messages.midnight])
-      );
+      if (forecasts === "Rain") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.midnight,
+              ...messages.rain,
+            ])
+        );
+      } else if (forecasts === "Thunderstorm") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.midnight,
+              ...messages.thunder,
+            ])
+        );
+      } else if (forecasts === "Snow") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.midnight,
+              ...messages.snow,
+            ])
+        );
+      } else if (forecasts === "Drizzle") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.drizzle,
+              ...messages.midnight,
+            ])
+        );
+      } else if (forecasts === "Clear") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clear,
+              ...messages.midnight,
+            ])
+        );
+      } else if (forecasts === "Clouds") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clouds,
+              ...messages.midnight,
+            ])
+        );
+      } else {
+        setOutput(
+          (state) => (state = [...messages.always, ...messages.midnight])
+        );
+      }
     } else if (hour > 4 && hour <= 7) {
       setIsDay((state) => (state = DAWN));
-      setOutput((state) => (state = [...messages.always, ...messages.dawn]));
+      if (forecasts === "Rain") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.dawn, ...messages.rain])
+        );
+      } else if (forecasts === "Thunderstorm") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.dawn,
+              ...messages.thunder,
+            ])
+        );
+      } else if (forecasts === "Snow") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.dawn, ...messages.snow])
+        );
+      } else if (forecasts === "Drizzle") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.drizzle,
+              ...messages.dawn,
+            ])
+        );
+      } else if (forecasts === "Clear") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.clear, ...messages.dawn])
+        );
+      } else if (forecasts === "Clouds") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.clouds, ...messages.dawn])
+        );
+      } else {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.dawn, ...messages.dawn])
+        );
+      }
     } else if (hour > 7 && hour <= 11) {
       setIsDay((state) => (state = MORNING));
-      setOutput((state) => (state = [...messages.always, ...messages.morning]));
+      if (forecasts === "Rain") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.morning,
+              ...messages.rain,
+            ])
+        );
+      } else if (forecasts === "Thunderstorm") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.morning,
+              ...messages.thunder,
+            ])
+        );
+      } else if (forecasts === "Snow") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.morning,
+              ...messages.snow,
+            ])
+        );
+      } else if (forecasts === "Drizzle") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.drizzle,
+              ...messages.morning,
+            ])
+        );
+      } else if (forecasts === "Clear") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clear,
+              ...messages.morning,
+            ])
+        );
+      } else if (forecasts === "Clouds") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clouds,
+              ...messages.morning,
+            ])
+        );
+      } else {
+        setOutput(
+          (state) => (state = [...messages.always, ...messages.morning])
+        );
+      }
     } else if (hour > 11 && hour <= 12) {
       setIsDay((state) => (state = LAUNCH));
-      setOutput((state) => (state = [...messages.always, ...messages.launch]));
+      if (forecasts === "Rain") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.launch, ...messages.rain])
+        );
+      } else if (forecasts === "Thunderstorm") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.launch,
+              ...messages.thunder,
+            ])
+        );
+      } else if (forecasts === "Snow") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.launch, ...messages.snow])
+        );
+      } else if (forecasts === "Drizzle") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.drizzle,
+              ...messages.launch,
+            ])
+        );
+      } else if (forecasts === "Clear") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clear,
+              ...messages.launch,
+            ])
+        );
+      } else if (forecasts === "Clouds") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clouds,
+              ...messages.launch,
+            ])
+        );
+      } else {
+        setOutput(
+          (state) => (state = [...messages.always, ...messages.launch])
+        );
+      }
     } else if (hour > 12 && hour <= 18) {
       setIsDay((state) => (state = DAY));
-      setOutput((state) => (state = [...messages.always, ...messages.day]));
-      setOutput((state) => (state = [...messages.always, ...messages.day]));
+      if (forecasts === "Rain") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.day, ...messages.rain])
+        );
+      } else if (forecasts === "Thunderstorm") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.day, ...messages.thunder])
+        );
+      } else if (forecasts === "Snow") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.day, ...messages.snow])
+        );
+      } else if (forecasts === "Drizzle") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.drizzle, ...messages.day])
+        );
+      } else if (forecasts === "Clear") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.clear, ...messages.day])
+        );
+      } else if (forecasts === "Clouds") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.clouds, ...messages.day])
+        );
+      } else {
+        setOutput((state) => (state = [...messages.always, ...messages.day]));
+      }
     } else if (hour > 18 && hour <= 24) {
       setIsDay((state) => (state = NIGHT));
-      setOutput((state) => (state = [...messages.always, ...messages.night]));
+      if (forecasts === "Rain") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.night, ...messages.rain])
+        );
+      } else if (forecasts === "Thunderstorm") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.night,
+              ...messages.thunder,
+            ])
+        );
+      } else if (forecasts === "Snow") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.night, ...messages.snow])
+        );
+      } else if (forecasts === "Drizzle") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.drizzle,
+              ...messages.night,
+            ])
+        );
+      } else if (forecasts === "Clear") {
+        setOutput(
+          (state) =>
+            (state = [...messages.always, ...messages.clear, ...messages.night])
+        );
+      } else if (forecasts === "Clouds") {
+        setOutput(
+          (state) =>
+            (state = [
+              ...messages.always,
+              ...messages.clouds,
+              ...messages.night,
+            ])
+        );
+      } else {
+        setOutput((state) => (state = [...messages.always, ...messages.night]));
+      }
     }
   };
 
@@ -92,18 +374,8 @@ const Message = ({ forecasts, messages }) => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setIsActive((state) => true);
-    let fadeInter = setInterval(() => setFade((fade) => fade + 1), 10000);
-    return () => clearInterval(fadeInter);
-  }, [timer]);
-
-  useEffect(() => {
-    setIsActive((state) => false);
-  }, [fade]);
-
   return (
-    <TextContainer>
+    <TextContainer ref={messageTxt}>
       <Text className={isActive ? "active" : "hidden"}>
         {output ? output[Math.floor(Math.random() * output.length)] : "hi"}
       </Text>

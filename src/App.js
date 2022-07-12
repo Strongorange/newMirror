@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { firestore } from "./firebase";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -256,11 +256,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    console.log(schedules);
+    // console.log(schedules);
   }, [schedules]);
 
   useEffect(() => {
-    console.log(gallery);
+    // console.log(gallery);
   }, [gallery]);
 
   useEffect(() => {
@@ -344,8 +344,8 @@ function App() {
                   </SubTitleContainer>
                   <ScheduleContainer>
                     {schedules !== null ? (
-                      schedules.map((c) => (
-                        <ScheduleRow>
+                      schedules.map((c, i) => (
+                        <ScheduleRow key={i}>
                           <ScheduleItem>
                             <Text>{`${new Date(
                               c.date.seconds * 1000
