@@ -71,12 +71,12 @@ const GridItem = styled.div`
   position: relative;
 
   .clock-date {
-    font-size: 36px;
+    font-size: 30px;
   }
 
   .clock-time {
     margin-top: 10px;
-    font-size: 85px;
+    font-size: 60px;
     font-weight: 800;
   }
 
@@ -211,8 +211,8 @@ const PhotoBox = styled.div`
 `;
 
 const PhotoItem = styled.img`
-  width: 190px;
-  height: 190px;
+  width: 140px;
+  height: 140px;
 `;
 
 function App() {
@@ -287,6 +287,7 @@ function App() {
                     locale="ko"
                     timezone="Asia/Seoul"
                     className="clock-date"
+                    style={{ marginBottom: "20px" }}
                   />
                   <Clock
                     format={"hh:mm:ss"}

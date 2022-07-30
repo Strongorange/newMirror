@@ -34,7 +34,7 @@ const TextContainer = styled.div`
 `;
 
 const Text = styled.span`
-  font-size: 60px;
+  font-size: 40px;
 `;
 
 const DAWN = 0;
