@@ -229,60 +229,7 @@ const Message = ({ forecasts, messages }) => {
           (state) => (state = [...messages.always, ...messages.morning])
         );
       }
-    } else if (hour > 11 && hour <= 12) {
-      setIsDay((state) => (state = LAUNCH));
-      if (forecasts === "Rain") {
-        setOutput(
-          (state) =>
-            (state = [...messages.always, ...messages.launch, ...messages.rain])
-        );
-      } else if (forecasts === "Thunderstorm") {
-        setOutput(
-          (state) =>
-            (state = [
-              ...messages.always,
-              ...messages.launch,
-              ...messages.thunder,
-            ])
-        );
-      } else if (forecasts === "Snow") {
-        setOutput(
-          (state) =>
-            (state = [...messages.always, ...messages.launch, ...messages.snow])
-        );
-      } else if (forecasts === "Drizzle") {
-        setOutput(
-          (state) =>
-            (state = [
-              ...messages.always,
-              ...messages.drizzle,
-              ...messages.launch,
-            ])
-        );
-      } else if (forecasts === "Clear") {
-        setOutput(
-          (state) =>
-            (state = [
-              ...messages.always,
-              ...messages.clear,
-              ...messages.launch,
-            ])
-        );
-      } else if (forecasts === "Clouds") {
-        setOutput(
-          (state) =>
-            (state = [
-              ...messages.always,
-              ...messages.clouds,
-              ...messages.launch,
-            ])
-        );
-      } else {
-        setOutput(
-          (state) => (state = [...messages.always, ...messages.launch])
-        );
-      }
-    } else if (hour > 12 && hour <= 18) {
+    } else if (hour >= 12 && hour <= 18) {
       setIsDay((state) => (state = DAY));
       if (forecasts === "Rain") {
         setOutput(

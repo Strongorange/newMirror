@@ -211,8 +211,8 @@ const PhotoBox = styled.div`
 `;
 
 const PhotoItem = styled.img`
-  width: 140px;
-  height: 140px;
+  width: 160px;
+  height: 160px;
 `;
 
 function App() {
