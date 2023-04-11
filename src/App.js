@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { firestore } from "./firebase";
 import { doc, onSnapshot } from "firebase/firestore";
@@ -223,7 +223,6 @@ function App() {
   const [messages, setMessages] = useState(null);
   const [schedules, setSchedules] = useState(null);
   const [gallery, setGallery] = useState(null);
-  const [koreanTime, setKoreanTime] = useState();
   const [APIKEY, setAPIKEY] = useState(process.env.REACT_APP_APIKEY);
 
   const getWeather = async () => {
