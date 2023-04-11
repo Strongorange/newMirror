@@ -146,12 +146,13 @@ const WeatherIcon = styled.img`
 
 const PhotoBox = styled.div`
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1/1;
 `;
 
 const PhotoItem = styled.img`
   width: 100%;
   height: 100%;
+  object-fit: cover;
 `;
 
 function App() {
@@ -280,10 +281,10 @@ function App() {
                     <PhotoItem src={gallery[1]} />
                   </PhotoBox>
                   <PhotoBox>
-                    <PhotoItem src={gallery[0]} />
+                    <PhotoItem src={gallery[2]} />
                   </PhotoBox>
                   <PhotoBox>
-                    <PhotoItem src={gallery[1]} />
+                    <PhotoItem src={gallery[3]} />
                   </PhotoBox>
                 </GridItem>
               </GridContainer>
