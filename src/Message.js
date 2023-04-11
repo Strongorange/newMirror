@@ -22,6 +22,15 @@ const fadeOut = keyframes`
   
 `;
 
+const fadeInOut = keyframes`
+  0%, 100% {
+    opacity: 0;
+  }
+  15%, 85% {
+    opacity: 1;
+  }
+`;
+
 const TextContainer = styled.div`
   .active {
     animation: ${fadeIn} 1s ease-in-out;
@@ -35,6 +44,7 @@ const TextContainer = styled.div`
 
 const Text = styled.span`
   font-size: 40px;
+  animation: ${fadeInOut} 12s linear infinite;
 `;
 
 const DAWN = 0;
@@ -48,7 +58,6 @@ const Message = ({ forecasts, messages }) => {
   const [isDay, setIsDay] = useState(MORNING);
   const [output, setOutput] = useState(null);
   const [timer, setTimer] = useState(0);
-  const [isActive, setIsActive] = useState(true);
   const messageTxt = useRef();
 
   const getIsDay = () => {
@@ -323,7 +332,7 @@ const Message = ({ forecasts, messages }) => {
 
   return (
     <TextContainer ref={messageTxt}>
-      <Text className={isActive ? "active" : "hidden"}>
+      <Text>
         {output ? output[Math.floor(Math.random() * output.length)] : "hi"}
       </Text>
     </TextContainer>
