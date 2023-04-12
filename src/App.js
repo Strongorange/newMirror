@@ -5,6 +5,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import Clock from "react-live-clock";
 import { WaterOutline, SunnyOutline } from "react-ionicons";
 import Message from "./Message";
+import useSaveUserAgent from "./hooks/useSaveUserAgent";
 
 const Outter = styled.div`
   display: flex;
@@ -171,6 +172,8 @@ function App() {
   const [schedules, setSchedules] = useState(null);
   const [gallery, setGallery] = useState(null);
   const [APIKEY, setAPIKEY] = useState(process.env.REACT_APP_APIKEY);
+
+  useSaveUserAgent();
 
   const getWeather = async () => {
     setIsLoading((state) => (state = true));
