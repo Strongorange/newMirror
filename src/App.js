@@ -146,10 +146,17 @@ const WeatherIcon = styled.img`
 
 const PhotoBox = styled.div`
   width: 100%;
-  aspect-ratio: 1/1;
+  padding-bottom: 100%;
+  position: relative;
+
+  @supports (aspect-ratop: 1/1) {
+    aspect-ratio: 1/1;
+    padding-bottom: 0;
+  }
 `;
 
 const PhotoItem = styled.img`
+  position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
