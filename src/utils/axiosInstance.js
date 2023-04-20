@@ -7,7 +7,7 @@ const weatherInstance = axios.create({
 
 const dustInstance = axios.create({
   baseURL:
-    "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty",
+    "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty",
 });
 
 export { weatherInstance, dustInstance };
