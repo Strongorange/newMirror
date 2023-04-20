@@ -44,7 +44,7 @@ function App() {
     } catch (error) {
       console.log("날씨, 먼지 데이터 가져오기에서 오류 발생 : \n", error);
     } finally {
-      setTimeout(() => setIsLoading(false), 2000);
+      setTimeout(() => setIsLoading(false), 4000);
       // console.log("weather active");
     }
   };
