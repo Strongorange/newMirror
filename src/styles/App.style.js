@@ -133,6 +133,20 @@ export const WeatherItem = styled.div`
   gap: 10px;
 `;
 
+export const DustInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+`;
+
+export const DustRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+`;
+
 export const WeatherIcon = styled.img`
   width: 85px;
   height: 100px;
