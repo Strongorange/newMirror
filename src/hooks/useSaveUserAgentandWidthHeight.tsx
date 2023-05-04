@@ -2,7 +2,11 @@ import { serverTimestamp, collection, addDoc } from "firebase/firestore";
 import { firestore } from "../firebase";
 import { useEffect, useState } from "react";
 
-const saveUserAgentandWidthHeight = async (userAgent, width, height) => {
+const saveUserAgentandWidthHeight = async (
+  userAgent: any,
+  width: number,
+  height: number
+) => {
   const data = {
     userAgent,
     deviceSize: {
