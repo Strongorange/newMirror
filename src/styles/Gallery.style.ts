@@ -21,7 +21,7 @@ export const PhotoBox = styled.div`
   padding-bottom: 100%;
   position: relative;
 
-  @supports (aspect-ratop: 1/1) {
+  @supports (aspect-ratio: 1/1) {
     aspect-ratio: 1/1;
     padding-bottom: 0;
   }

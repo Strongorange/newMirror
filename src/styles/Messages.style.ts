@@ -30,7 +30,7 @@ const fadeInOut = keyframes`
   }
 `;
 
-const TextContainer = styled.div`
+export const MessagesLayout = styled.div`
   .active {
     animation: ${fadeIn} 1s ease-in-out;
   }
@@ -41,7 +41,7 @@ const TextContainer = styled.div`
   }
 `;
 
-const Text = styled.span`
+export const Text = styled.span`
   font-size: 40px;
   animation: ${fadeInOut} 12s linear infinite;
 `;

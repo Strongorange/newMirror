@@ -20,7 +20,6 @@ function Home() {
   const setForecasts = useSetRecoilState(forecastsState);
   const setDustData = useSetRecoilState(dustDataState);
   const setGallery = useSetRecoilState(galleryState);
-
   const setMessages = useSetRecoilState(messagesState);
 
   useSaveUserAgentWidthHeight();
@@ -40,7 +39,6 @@ function Home() {
       ]);
 
       setForecasts(weatherData);
-
       setDustData({
         gunsan: dustDataGunsan,
         kimje: dustDataKimje,
@@ -48,7 +46,7 @@ function Home() {
     } catch (error) {
       console.log("날씨, 먼지 데이터 가져오기에서 오류 발생 : \n", error);
     } finally {
-      setTimeout(() => setIsLoading(false), 10000);
+      setTimeout(() => setIsLoading(false), 500);
     }
   };
 
@@ -76,10 +74,6 @@ function Home() {
             <S.Text>노루를 데려오는 중</S.Text>
           ) : (
             <>
-              {/* <Message
-                forecasts={forecasts.current.weather[0].main}
-                messages={messages}
-              /> */}
               <Messages />
               <S.GridContainer>
                 <ClockSection />
