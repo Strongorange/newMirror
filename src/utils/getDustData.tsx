@@ -17,7 +17,7 @@ const APIKEY = process.env.REACT_APP_DUST_APIKEY;
  * @param {boolean} isGunsan - true: 군산, false: 김제 요촌동
  * returns {Promise} - axios response data
  */
-export const getDustData = async (isGunsan) => {
+export const getDustData = async (isGunsan: any) => {
   const response = await dustInstance.get("", {
     params: {
       serviceKey: APIKEY,
@@ -47,7 +47,7 @@ export const getDustData = async (isGunsan) => {
  * @param {string | number} pm25Value - 초미세먼지 농도 ug/m3
  * @returns {string} - 미세먼지, 초미세먼지 등급
  */
-export const getAirQuality = (pm10Value, pm25Value) => {
+export const getAirQuality = (pm10Value: any, pm25Value: any) => {
   const pm10 = Number(pm10Value);
   const pm25 = Number(pm25Value);
 
@@ -72,10 +72,8 @@ export const getAirQuality = (pm10Value, pm25Value) => {
 
 /**
  * @description 미세먼지, 초미세먼지 등급에 따라 아이콘을 반환합니다.
- * @param {string} airQuality
- * @returns {JSX.Element} - airQuality에 따른 아이콘
  */
-export const getAirQualityIcon = (airQuality) => {
+export const getAirQualityIcon = (airQuality: any) => {
   switch (airQuality) {
     case "최고 좋음":
       return <BiHappyHeartEyes />;
