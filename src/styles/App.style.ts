@@ -65,28 +65,6 @@ export const GridItem = styled.div`
 
     gap: 5px;
   }
-
-  .clock-date {
-    font-size: 30px;
-  }
-
-  .clock-time {
-    margin-top: 10px;
-    font-size: 60px;
-    font-weight: 800;
-  }
-
-  .weather {
-    align-items: flex-end;
-  }
-
-  .schedule {
-    align-items: flex-start;
-  }
-
-  .weekly {
-    align-items: flex-end;
-  }
 `;
 
 export const PhotoWrapper = styled.div`

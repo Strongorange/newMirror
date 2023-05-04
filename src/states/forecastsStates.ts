@@ -1,15 +1,14 @@
+import { Forecasts } from "../types/forecastsTypes";
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 const { persistAtom } = recoilPersist({
-  key: "galleryStateSession",
+  key: "forecastsStateSession",
   storage: sessionStorage,
 });
 
-type GalleryState = string[];
-
-export const galleryState = atom<GalleryState>({
-  key: "galleryState",
-  default: [],
+export const forecastsState = atom<Partial<Forecasts>>({
+  key: "forecastsState",
+  default: {},
   effects_UNSTABLE: [persistAtom],
 });

@@ -1,15 +1,14 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { Messages } from "src/types/messagesTypes";
 
 const { persistAtom } = recoilPersist({
-  key: "galleryStateSession",
+  key: "messagesStateSession",
   storage: sessionStorage,
 });
 
-type GalleryState = string[];
-
-export const galleryState = atom<GalleryState>({
-  key: "galleryState",
-  default: [],
+export const messagesState = atom<Partial<Messages>>({
+  key: "messagesState",
+  default: {},
   effects_UNSTABLE: [persistAtom],
 });

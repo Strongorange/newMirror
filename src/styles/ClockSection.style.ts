@@ -10,6 +10,7 @@ export const ClockLayout = styled.div`
   height: 100%;
   //grid position
   grid-row: 1 / 2;
+  grid-column: 1 / 2;
 
   .clock-date {
     font-size: 30px;
