@@ -1,7 +1,7 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
 import { galleryState } from "src/states/galleryStates";
-import * as S from "../styles/Gallery.style";
+import * as S from "../../styles/Gallery.style";
 
 const Gallery = () => {
   const gallery = useRecoilValue(galleryState);

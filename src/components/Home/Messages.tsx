@@ -4,7 +4,7 @@ import { forecastsState } from "src/states/forecastsStates";
 import { messagesState } from "src/states/messagesStates";
 import { produce } from "immer";
 
-import * as S from "../styles/Messages.style";
+import * as S from "../../styles/Messages.style";
 
 const Messages = () => {
   const messages = useRecoilValue(messagesState);
