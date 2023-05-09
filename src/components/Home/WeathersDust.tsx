@@ -1,10 +1,10 @@
-import { dustDataState } from "../states/dustDataStates";
-import { forecastsState } from "../states/forecastsStates";
-import { getAirQualityIcon } from "../utils/getDustData";
+import { dustDataState } from "../../states/dustDataStates";
+import { forecastsState } from "../../states/forecastsStates";
+import { getAirQualityIcon } from "../../utils/getDustData";
 import React from "react";
 import { SunnyOutline, WaterOutline } from "react-ionicons";
 import { useRecoilValue } from "recoil";
-import * as S from "../styles/WeathersDust.style";
+import * as S from "../../styles/WeathersDust.style";
 
 const WeathersDust = () => {
   const forecasts = useRecoilValue(forecastsState);

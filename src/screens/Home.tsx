@@ -5,15 +5,15 @@ import * as S from "../styles/App.style";
 import useSaveUserAgentWidthHeight from "../hooks/useSaveUserAgentandWidthHeight";
 import getWeatherData from "../utils/getWeatherData";
 import { getDustData } from "../utils/getDustData";
-import ClockSection from "../components/ClockSection";
-import WeathersDust from "../components/WeathersDust";
+import ClockSection from "../components/Home/ClockSection";
+import WeathersDust from "../components/Home/WeathersDust";
 import { useSetRecoilState } from "recoil";
 import { forecastsState } from "../states/forecastsStates";
 import { dustDataState } from "../states/dustDataStates";
-import Gallery from "src/components/Gallery";
+import Gallery from "src/components/Home/Gallery";
 import { galleryState } from "src/states/galleryStates";
 import { messagesState } from "src/states/messagesStates";
-import Messages from "src/components/Messages";
+import Messages from "src/components/Home/Messages";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
