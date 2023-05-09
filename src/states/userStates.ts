@@ -7,8 +7,8 @@ const { persistAtom } = recoilPersist({
   storage: sessionStorage,
 });
 
-export const userState = atom<Partial<User>>({
+export const userState = atom<Partial<User> | null>({
   key: "userState",
-  default: {},
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });

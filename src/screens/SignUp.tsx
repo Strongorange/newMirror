@@ -1,9 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { ChangeEvent, MouseEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
 import { auth } from "src/firebase";
-import { userState } from "src/states/userStates";
 import * as S from "../styles/auth/auth";
 
 const SignUp = () => {
@@ -12,7 +10,7 @@ const SignUp = () => {
     password: "",
     passwordCheck: "",
   });
-  const setUserState = useSetRecoilState(userState);
+
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +35,6 @@ const SignUp = () => {
       );
       if (result) {
         alert("회원가입이 완료되었습니다.");
-        const user = result.user;
-        setUserState(user);
         navigate("/login");
       }
     } catch (error) {
