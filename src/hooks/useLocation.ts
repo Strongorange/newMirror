@@ -5,12 +5,12 @@ interface Location {
   longitude: number | null;
 }
 
-const useLocation = () => {
+const useLocation = (): [Location, any] => {
   const [location, setLocation] = useState<Location>({
     latitude: null,
     longitude: null,
   });
-  const [error, setError] = useState<GeolocationPositionError | null>(null);
+  const [error, setError] = useState<any | null>(null);
 
   const getLocationPermission = async () => {
     try {
@@ -24,24 +24,24 @@ const useLocation = () => {
     }
   };
 
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      let currentPosition: Location = {
-        latitude: null,
-        longitude: null,
-      };
-      navigator.geolocation.getCurrentPosition(
-        (positoin) => {
-          currentPosition.latitude = positoin.coords.latitude;
-          currentPosition.longitude = positoin.coords.longitude;
-        },
-        (error) => {
-          setError(error);
-          throw error;
-        }
-      );
-      return currentPosition;
-    }
+  const getCurrentLocation = async () => {
+    return new Promise<Location>((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            resolve({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      } else {
+        reject(new Error("Geolocation is not supported by this browser."));
+      }
+    });
   };
 
   useEffect(() => {
@@ -49,12 +49,13 @@ const useLocation = () => {
       const isPermissionGranted = await getLocationPermission();
       if (isPermissionGranted) {
         try {
-          const currentLocation = getCurrentLocation();
-          setLocation(currentLocation!);
-        } catch (error) {
-          alert("위치 정보를 가져오는데 실패했습니다.");
-          console.log(error);
+          const currentLocation = await getCurrentLocation();
+          setLocation(currentLocation);
+        } catch (locationError) {
+          setError(locationError);
         }
+      } else {
+        setError(new Error("위치 권한이 없습니다."));
       }
     };
 
