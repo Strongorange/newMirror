@@ -6,7 +6,7 @@ const { persistAtom } = recoilPersist({
   storage: sessionStorage,
 });
 
-type GalleryState = string[];
+export type GalleryState = string[];
 
 export const galleryState = atom<GalleryState>({
   key: "galleryState",

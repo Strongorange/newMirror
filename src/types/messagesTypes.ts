@@ -12,3 +12,18 @@ export interface Messages {
   thunder: string[];
   snow: string[];
 }
+
+export const defaultMessages: Messages = {
+  clear: [],
+  rain: [],
+  midnight: [],
+  morning: [],
+  drizzle: [],
+  day: [],
+  dawn: [],
+  clouds: [],
+  always: [],
+  night: [],
+  thunder: [],
+  snow: [],
+};

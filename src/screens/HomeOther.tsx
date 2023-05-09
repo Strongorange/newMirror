@@ -3,14 +3,17 @@ import ClockSection from "src/components/Home/ClockSection";
 import * as S from "src/styles/App.style";
 import getWeatherData from "src/utils/getWeatherData";
 import useLocation from "src/hooks/useLocation";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { forecastsState } from "src/states/forecastsStates";
 import useFirestore from "src/hooks/useFirestore";
+import WeathersDust from "src/components/Home/WeathersDust";
 
 const HomeOther = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentLocation, error] = useLocation();
-  const setForecasts = useSetRecoilState(forecastsState);
+  const [forecasts, setForecasts] = useRecoilState(forecastsState);
+  // hooks
+  useFirestore();
 
   // functions
   const getWeatherAndDust = async () => {
@@ -32,9 +35,6 @@ const HomeOther = () => {
     }
   };
 
-  // hooks
-  useFirestore();
-
   // useEffects
 
   // renders
@@ -45,6 +45,7 @@ const HomeOther = () => {
       <S.Container>
         <S.GridContainer>
           <ClockSection />
+          <WeathersDust />
         </S.GridContainer>
       </S.Container>
     </S.Outter>
