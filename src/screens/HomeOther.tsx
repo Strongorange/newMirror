@@ -12,6 +12,8 @@ import { dustDataOthersState } from "src/states/dustDataStates";
 import { produce } from "immer";
 import WeathersDustOthers from "src/components/Home/Others/WeatherDustOthers";
 import { useQuery } from "react-query";
+import Gallery from "src/components/Home/Gallery";
+import Messages from "src/components/Home/Messages";
 
 const HomeOther = () => {
   // states
@@ -75,10 +77,18 @@ const HomeOther = () => {
   return (
     <S.Outter>
       <S.Container>
-        <S.GridContainer>
-          <ClockSection />
-          <WeathersDustOthers />
-        </S.GridContainer>
+        {isLoading ? (
+          <S.Text>로딩중...</S.Text>
+        ) : (
+          <>
+            <Messages />
+            <S.GridContainer>
+              <ClockSection />
+              <WeathersDustOthers />
+              <Gallery />
+            </S.GridContainer>
+          </>
+        )}
       </S.Container>
     </S.Outter>
   );

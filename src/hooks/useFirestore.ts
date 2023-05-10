@@ -57,6 +57,9 @@ const useFirestore = () => {
         unsubscribeMessage();
         unscribeSettings();
       };
+    } else {
+      console.log("Firebase 유저 정보 없음");
+      return;
     }
   }, []);
 };
