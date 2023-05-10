@@ -9,7 +9,7 @@ import {
   setPersistence,
 } from "firebase/auth";
 import { auth } from "./firebase";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { userState } from "./states/userStates";
 import HomeOther from "./screens/HomeOther";
 
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   // Firebase Auth 파트
-  const setUserState = useSetRecoilState(userState);
+  const [user, setUserState] = useRecoilState(userState);
   useEffect(() => {
     // 로그인 상태 관리, 로그인한 유저의 정보를 저장, 로그아웃 시 null
     const userInfoUnsubscribe = onAuthStateChanged(auth, (user) => {
