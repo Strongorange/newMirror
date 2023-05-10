@@ -7,6 +7,7 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { forecastsState } from "src/states/forecastsStates";
 import useFirestore from "src/hooks/useFirestore";
 import WeathersDust from "src/components/Home/WeathersDust";
+import useGetSGISToken from "src/hooks/useGetSGISToken";
 
 const HomeOther = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -14,6 +15,7 @@ const HomeOther = () => {
   const [forecasts, setForecasts] = useRecoilState(forecastsState);
   // hooks
   useFirestore();
+  useGetSGISToken();
 
   // functions
   const getWeatherAndDust = async () => {

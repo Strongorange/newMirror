@@ -13,7 +13,6 @@ import { ImAngry } from "react-icons/im";
 const APIKEY = process.env.REACT_APP_DUST_APIKEY;
 
 /**
- *
  * @param {boolean} isGunsan - true: 군산, false: 김제 요촌동
  * returns {Promise} - axios response data
  */
