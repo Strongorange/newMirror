@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { ForecastLocations, locationState } from "src/states/locationStates";
 import { sgisTokenState } from "src/states/sgisTokenState";
 
 interface Location {
@@ -13,14 +14,10 @@ interface Location {
 const SGIS_TRANSFORM_URL =
   "https://sgisapi.kostat.go.kr/OpenAPI3/transformation/transcoord.json";
 
-const useLocation = (): [Location, any] => {
+const useLocation = (): [ForecastLocations, any] => {
   const { accessToken } = useRecoilValue(sgisTokenState);
-  const [location, setLocation] = useState<Location>({
-    latitude: null,
-    longitude: null,
-    TM_X: null,
-    TM_Y: null,
-  });
+
+  const [locations, setLocations] = useRecoilState(locationState);
   const [error, setError] = useState<any | null>(null);
 
   const getLocationPermission = async () => {
@@ -81,7 +78,17 @@ const useLocation = (): [Location, any] => {
       if (isPermissionGranted) {
         try {
           const currentLocation = await getCurrentLocation();
-          setLocation(currentLocation);
+          setLocations((prev) => {
+            return {
+              ...prev,
+              currentLocation: {
+                latitude: currentLocation.latitude!,
+                longitude: currentLocation.longitude!,
+                tmX: currentLocation.TM_X!,
+                tmY: currentLocation.TM_Y!,
+              },
+            };
+          });
         } catch (locationError) {
           setError(locationError);
         }
@@ -93,7 +100,7 @@ const useLocation = (): [Location, any] => {
     fetchLocation();
   }, []);
 
-  return [location, error];
+  return [locations, error];
 };
 
 export default useLocation;
