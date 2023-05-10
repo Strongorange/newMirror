@@ -38,6 +38,9 @@ const HomeOther = () => {
   };
 
   // useEffects
+  useEffect(() => {
+    console.log("currentLocation", currentLocation);
+  }, [currentLocation]);
 
   // renders
   if (error) alert(error);
