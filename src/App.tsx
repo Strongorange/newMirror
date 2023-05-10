@@ -9,7 +9,7 @@ import {
   setPersistence,
 } from "firebase/auth";
 import { auth } from "./firebase";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userState } from "./states/userStates";
 import HomeOther from "./screens/HomeOther";
 
