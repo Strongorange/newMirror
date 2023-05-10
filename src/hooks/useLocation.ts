@@ -1,16 +1,24 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { ForecastLocations, locationState } from "src/states/locationStates";
+import { sgisTokenState } from "src/states/sgisTokenState";
 
 interface Location {
   latitude: number | null;
   longitude: number | null;
+  TM_X?: number | null;
+  TM_Y?: number | null;
 }
 
-const useLocation = () => {
-  const [location, setLocation] = useState<Location>({
-    latitude: null,
-    longitude: null,
-  });
-  const [error, setError] = useState<GeolocationPositionError | null>(null);
+const SGIS_TRANSFORM_URL =
+  "https://sgisapi.kostat.go.kr/OpenAPI3/transformation/transcoord.json";
+
+const useLocation = (): [ForecastLocations, any] => {
+  const { accessToken } = useRecoilValue(sgisTokenState);
+
+  const [locations, setLocations] = useRecoilState(locationState);
+  const [error, setError] = useState<any | null>(null);
 
   const getLocationPermission = async () => {
     try {
@@ -24,24 +32,44 @@ const useLocation = () => {
     }
   };
 
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      let currentPosition: Location = {
-        latitude: null,
-        longitude: null,
-      };
-      navigator.geolocation.getCurrentPosition(
-        (positoin) => {
-          currentPosition.latitude = positoin.coords.latitude;
-          currentPosition.longitude = positoin.coords.longitude;
-        },
-        (error) => {
-          setError(error);
-          throw error;
-        }
-      );
-      return currentPosition;
-    }
+  const getCurrentLocation = async () => {
+    return new Promise<Location>((resolve, reject) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            // 위도, 경도를 TM 좌표로 변환
+            const { latitude, longitude } = position.coords;
+            try {
+              const transformResponse = await axios(SGIS_TRANSFORM_URL, {
+                params: {
+                  accessToken,
+                  src: 4326,
+                  dst: 5181,
+                  posX: longitude,
+                  posY: latitude,
+                },
+              });
+              const { posX, posY } = transformResponse.data.result;
+
+              resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                TM_X: posX,
+                TM_Y: posY,
+              });
+            } catch (error) {
+              alert(error);
+              console.log(error);
+            }
+          },
+          (error) => {
+            reject(error);
+          }
+        );
+      } else {
+        reject(new Error("Geolocation is not supported by this browser."));
+      }
+    });
   };
 
   useEffect(() => {
@@ -49,19 +77,30 @@ const useLocation = () => {
       const isPermissionGranted = await getLocationPermission();
       if (isPermissionGranted) {
         try {
-          const currentLocation = getCurrentLocation();
-          setLocation(currentLocation!);
-        } catch (error) {
-          alert("위치 정보를 가져오는데 실패했습니다.");
-          console.log(error);
+          const currentLocation = await getCurrentLocation();
+          setLocations((prev) => {
+            return {
+              ...prev,
+              currentLocation: {
+                latitude: currentLocation.latitude!,
+                longitude: currentLocation.longitude!,
+                tmX: currentLocation.TM_X!,
+                tmY: currentLocation.TM_Y!,
+              },
+            };
+          });
+        } catch (locationError) {
+          setError(locationError);
         }
+      } else {
+        setError(new Error("위치 권한이 없습니다."));
       }
     };
 
     fetchLocation();
   }, []);
 
-  return [location, error];
+  return [locations, error];
 };
 
 export default useLocation;

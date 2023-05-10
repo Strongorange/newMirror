@@ -9,15 +9,16 @@ import {
 import { GiGasMask } from "react-icons/gi";
 import { BsEmojiAngry } from "react-icons/bs";
 import { ImAngry } from "react-icons/im";
+import axios from "axios";
+import { NearbyStationType } from "src/types/dustDataStates";
 
 const APIKEY = process.env.REACT_APP_DUST_APIKEY;
 
 /**
- *
  * @param {boolean} isGunsan - true: 군산, false: 김제 요촌동
  * returns {Promise} - axios response data
  */
-export const getDustData = async (isGunsan: any) => {
+export const getDustData = async (isGunsan: boolean) => {
   const response = await dustInstance.get("", {
     params: {
       serviceKey: APIKEY,
@@ -36,6 +37,60 @@ export const getDustData = async (isGunsan: any) => {
     airQuality,
     pm10Value,
     pm25Value,
+  };
+
+  return dustData;
+};
+
+/**
+ * @description TM 좌표를 기준으로 근접한 측정소를 반환합니다.
+ */
+const getNearbyDustStation = async (tmX: number, tmY: number) => {
+  const REQUST_URL =
+    "http://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getNearbyMsrstnList";
+  try {
+    const response = await axios(REQUST_URL, {
+      params: {
+        serviceKey: APIKEY,
+        returnType: "json",
+        tmX,
+        tmY,
+        ver: 1.1,
+      },
+    });
+    const nearbyStation: NearbyStationType =
+      response.data.response.body.items[0];
+    return nearbyStation;
+  } catch (error) {
+    alert(error);
+    console.log(error);
+  }
+};
+
+/**
+ * @description 측정소 이름을 기준으로 미세먼지 데이터를 반환합니다.
+ */
+export const getDustDataByTM = async (tmX: number, tmY: number) => {
+  const nearbyStaion = await getNearbyDustStation(tmX, tmY);
+  const response = await dustInstance.get("", {
+    params: {
+      serviceKey: APIKEY,
+      returnType: "json",
+      numOfRows: 100,
+      stationName: nearbyStaion!.stationName,
+      dataTerm: "DAILY",
+      ver: "1.4",
+    },
+  });
+  const responseData = response.data.response.body.items[0];
+  const { pm25Value, pm10Value } = responseData;
+  const airQuality = getAirQuality(pm10Value, pm25Value);
+
+  const dustData = {
+    airQuality,
+    pm10Value,
+    pm25Value,
+    station: nearbyStaion,
   };
 
   return dustData;
