@@ -1,17 +1,23 @@
+import { DustStation } from "./dustStationTypes";
+
 export interface Settings {
-  [key: string]: any;
+  theme: string;
+  location: {
+    selected: DustStation;
+  };
 }
 
 export const defaultSettings: Settings = {
   theme: "light",
   location: {
-    current: {
-      latitude: 0,
-      longitude: 0,
-    },
     selected: {
-      latitude: 0,
-      longitude: 0,
+      addr: "",
+      dmX: "",
+      dmY: "",
+      item: "",
+      mangName: "",
+      stationName: "",
+      year: "",
     },
   },
 };

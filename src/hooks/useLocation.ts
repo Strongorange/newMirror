@@ -16,7 +16,7 @@ const SGIS_TRANSFORM_URL =
 
 const useLocation = (): [ForecastLocations, any] => {
   const { accessToken } = useRecoilValue(sgisTokenState);
-
+  // 현재 위치 정보 상태, Lat, Long, TM_X, TM_Y
   const [locations, setLocations] = useRecoilState(locationState);
   const [error, setError] = useState<any | null>(null);
 

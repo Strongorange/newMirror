@@ -51,11 +51,15 @@ const WeathersDustOthers = () => {
               {dustData.current.airQuality}{" "}
               {getAirQualityIcon(dustData.current.airQuality)}
             </S.Text>
-            <S.Text>
-              {dustData.selected.station.stationName} 대기질:{" "}
-              {dustData.selected.airQuality}{" "}
-              {getAirQualityIcon(dustData.selected.airQuality)}
-            </S.Text>
+            {dustData.selected.station ? (
+              <S.Text>
+                {dustData.selected.station} 대기질:{" "}
+                {dustData.selected.airQuality}{" "}
+                {getAirQualityIcon(dustData.selected.airQuality)}
+              </S.Text>
+            ) : (
+              <S.Text>앱에서 위치를 등록해주세요</S.Text>
+            )}
           </S.DustRow>
         </S.DustInfo>
       </S.WeatherContainer>
