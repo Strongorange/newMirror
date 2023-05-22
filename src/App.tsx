@@ -12,6 +12,7 @@ import { auth } from "./firebase";
 import { useRecoilState } from "recoil";
 import { userState } from "./states/userStates";
 import HomeOther from "./screens/HomeOther";
+import SignOut from "./screens/SignOut";
 
 const router = createBrowserRouter([
   {
@@ -30,11 +31,16 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUp />,
   },
+  {
+    path: "/signout",
+    element: <SignOut />,
+  },
 ]);
 
 const App = () => {
   // Firebase Auth 파트
   const [user, setUserState] = useRecoilState(userState);
+
   useEffect(() => {
     // 로그인 상태 관리, 로그인한 유저의 정보를 저장, 로그아웃 시 null
     const userInfoUnsubscribe = onAuthStateChanged(auth, (user) => {

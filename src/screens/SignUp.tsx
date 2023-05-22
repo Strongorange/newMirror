@@ -2,7 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { ChangeEvent, MouseEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "src/firebase";
-import * as S from "../styles/auth/auth";
+import * as S from "../styles/auth/auth.style";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({

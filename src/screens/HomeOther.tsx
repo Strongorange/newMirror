@@ -18,6 +18,8 @@ import { useQuery } from "react-query";
 import Gallery from "src/components/Home/Gallery";
 import Messages from "src/components/Home/Messages";
 import { firebaseSettingsState } from "src/states/firebaseSettingStates";
+import { useNavigate } from "react-router-dom";
+import { userState } from "src/states/userStates";
 
 const HomeOther = () => {
   // states
@@ -25,6 +27,8 @@ const HomeOther = () => {
   const setForecasts = useSetRecoilState(forecastsState);
   const [dustData, setDustData] = useRecoilState(dustDataOthersState);
   const settings = useRecoilValue(firebaseSettingsState);
+  const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   // hooks
   // 현재 위치 정보 상태, Lat, Long, TM_X, TM_Y
@@ -84,15 +88,19 @@ const HomeOther = () => {
     }, 6000);
   }, []);
 
+  useEffect(() => {
+    if (!user) navigate("/login");
+  }, [navigate, user]);
+
   // 디버깅
 
-  useEffect(() => {
-    console.log(settings);
-  }, [settings]);
+  // useEffect(() => {
+  //   console.log(settings);
+  // }, [settings]);
 
-  useEffect(() => {
-    console.log(dustData);
-  }, [dustData]);
+  // useEffect(() => {
+  //   console.log(dustData);
+  // }, [dustData]);
 
   //react-query
   const { isLoading } = useQuery(["appData", settings], getWeatherAndDust, {

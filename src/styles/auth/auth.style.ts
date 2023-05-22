@@ -45,3 +45,7 @@ export const FormButton = styled.button`
 `;
 
 export const FormSocials = styled.div``;
+
+export const SignOutButton = styled.button`
+  padding: 20px;
+`;
