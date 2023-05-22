@@ -1,5 +1,5 @@
 import React, { ChangeEvent, MouseEvent, useState } from "react";
-import * as S from "../styles/auth/auth";
+import * as S from "../styles/auth/auth.style";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "src/firebase";
