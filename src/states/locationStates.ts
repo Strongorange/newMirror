@@ -15,14 +15,12 @@ type Location = {
 
 export interface ForecastLocations {
   currentLocation?: Location;
-  selectedLocation?: Location;
 }
 
 export const locationState = atom<ForecastLocations>({
   key: "locationState",
   default: {
     currentLocation: undefined,
-    selectedLocation: undefined,
   },
   effects_UNSTABLE: [persistAtom],
 });

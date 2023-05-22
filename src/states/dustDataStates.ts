@@ -3,7 +3,6 @@ import { recoilPersist } from "recoil-persist";
 import {
   defaultDustDataState,
   DustDataOthersState,
-  NearbyStationType,
 } from "src/types/dustDataStates";
 
 const { persistAtom } = recoilPersist({

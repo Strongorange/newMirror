@@ -16,7 +16,7 @@ export interface DustDataOthersState {
     airQuality: string;
     pm10Value: string;
     pm25Value: string;
-    station: NearbyStationType;
+    station: string;
   };
 }
 
@@ -36,11 +36,6 @@ export const defaultDustDataState: DustDataOthersState = {
     airQuality: "",
     pm10Value: "",
     pm25Value: "",
-    station: {
-      stationName: "",
-      addr: "",
-      tm: 0,
-      stationCode: "",
-    },
+    station: "",
   },
 };
