@@ -14,10 +14,12 @@ import { userState } from "./states/userStates";
 import HomeOther from "./screens/HomeOther";
 import SignOut from "./screens/SignOut";
 
+console.log(process.env.REACT_APP_ISRA);
+
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomeOther />,
+    element: process.env.REACT_APP_ISRA === "true" ? <Home /> : <HomeOther />,
   },
   {
     path: "/homeothers",

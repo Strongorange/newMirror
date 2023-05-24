@@ -1,8 +1,16 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { ForecastLocations, locationState } from "src/states/locationStates";
-import { sgisTokenState } from "src/states/sgisTokenState";
+
+import proj4 from "proj4";
+
+// WGS84,EPSG:4326 좌표계(위도, 경도)
+proj4.defs("EPSG:4326", "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs");
+// TM좌표
+proj4.defs(
+  "EPSG:5181",
+  "+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs"
+);
 
 interface Location {
   latitude: number | null;
@@ -11,11 +19,7 @@ interface Location {
   TM_Y?: number | null;
 }
 
-const SGIS_TRANSFORM_URL =
-  "https://sgisapi.kostat.go.kr/OpenAPI3/transformation/transcoord.json";
-
 const useLocation = (): [ForecastLocations, any] => {
-  const { accessToken } = useRecoilValue(sgisTokenState);
   // 현재 위치 정보 상태, Lat, Long, TM_X, TM_Y
   const [locations, setLocations] = useRecoilState(locationState);
   const [error, setError] = useState<any | null>(null);
@@ -40,22 +44,19 @@ const useLocation = (): [ForecastLocations, any] => {
             // 위도, 경도를 TM 좌표로 변환
             const { latitude, longitude } = position.coords;
             try {
-              const transformResponse = await axios(SGIS_TRANSFORM_URL, {
-                params: {
-                  accessToken,
-                  src: 4326,
-                  dst: 5181,
-                  posX: longitude,
-                  posY: latitude,
-                },
-              });
-              const { posX, posY } = transformResponse.data.result;
+              // proj4 라이브러리를 사용하여 좌표 변환
+              // WGS84 좌표계(위도, 경도) ->  TM 좌표계
+              // 'EPSG:4326' -> 'EPSG:5181' 파일 맨위에 define 해놓음
+              const [TM_X, TM_Y] = proj4("EPSG:4326", "EPSG:5181", [
+                longitude,
+                latitude,
+              ]);
 
               resolve({
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
-                TM_X: posX,
-                TM_Y: posY,
+                TM_X,
+                TM_Y,
               });
             } catch (error) {
               alert(error);
