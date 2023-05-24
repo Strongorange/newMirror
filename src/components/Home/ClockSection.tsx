@@ -1,5 +1,5 @@
 import React from "react";
-import * as S from "../styles/ClockSection.style";
+import * as S from "../../styles/ClockSection.style";
 import Clock from "react-live-clock";
 
 const ClockSection = () => {

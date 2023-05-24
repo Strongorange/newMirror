@@ -1,15 +1,14 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { User } from "firebase/auth";
 
 const { persistAtom } = recoilPersist({
-  key: "galleryStateSession",
+  key: "userInfo",
   storage: sessionStorage,
 });
 
-export type GalleryState = string[];
-
-export const galleryState = atom<GalleryState>({
-  key: "galleryState",
-  default: [],
+export const userState = atom<Partial<User> | null>({
+  key: "userState",
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });

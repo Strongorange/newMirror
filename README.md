@@ -1,14 +1,75 @@
 # Smart Mirror
 
-날씨, 시간, 미세먼지, Firestore에 업데이트한 사진 정보를 보여주는 스마트 미러.
-하드웨어와 한 세트
+> `현재 시간`, `현재 위치 날씨와 미세먼지 정보`, `내가 설정한 위치의 미세먼지 정보` , `내가 선택한 메세지와 사진`을 보여주는 스마트 미러입니다.  
+> [🌐 스마트미러 컨트롤러](https://github.com/Strongorange/newMirrorController) 앱과 연동하여 사용합니다.
 
-## 기술 스택
+![미러 사진 바꾸기-0001](https://github.com/Strongorange/newMirror/assets/74127841/0a753613-6936-4821-908a-3ddfb09cf3e6)
+![image](https://github.com/Strongorange/newMirror/assets/74127841/f5938a0e-593e-4ac7-9bdf-4a21031ae96d)
 
-- React
+
+# 1. 제작 기간
+
+- 2022.07 ~ 2022.07 (개인용)
+- 2023.04 ~ 2022.05 (리팩토링, 배포용)
+
+</br>
+
+# 2. 사용 기술
+
+### `공통`
+
 - Firebase
+  - Auth
+  - Storage
+  - Firestore DB
+- TypeScript
+
+### `Web`
+
+- React.js
+
+### `App`
+
+- React Native
+
+### `API`
+
 - [OpenWeatherMap](https://openweathermap.org/)
 - [한국환경공단 에어코리아 대기오염정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15073861)
+- [SGIS 좌표변환 API](https://sgis.kostat.go.kr/developer/html/newOpenApi/api/dataApi/coord.html#transcoord)
 
-## 거울
-<img src="https://lh3.googleusercontent.com/UPW4t-FVKLA0prkkGn9MfFEmFO2eEOzDu4TFIXqBxR6K-NCL74-Td1EaBU_fruRoVW3sRz4eqOBgH-eKXpTsTn6QpJsVCN15qto6Q0u5mm9Fvo7dzYN-uu6LU4NVfOayiR2JH2k3DZwwhae9N1s8wTkvPjSIxVmJbzVdXYo_mwFu3adLjtm9ndyKWcXE9bJ0sbl0cbJXhjQ6h7MWQrtNHlyYH_EaAtBLeLuVZdjx0ZsKShJTFcE6M35k2Qej0Z6AwbYTk6ModQAdEZiJ3yKm5vtf9uYsiMM9N9Ajfte2tFRsOedSj1GEHVuxD5BzIag_uywxt9rKP4hxl00qRAFwkRoqfTnsrEP8TRQ5LWzWCl-msaWztKaC49xMIMvpYoqY0YTxuff3pk_ds67GumDOLtYdogb5OQzwxFSqAVoeRynlbgE8KEw3ULW3m9bC5QLinfjf1zEPtFKG3DkDrO5CxQp1HNOQlQrZt0eKJ3aRbzKq34K1ucol5zhPIFzmgA59fheo9ueCLzz32VVOkpMnLJXf3Y2wPvnut09a04RIw0oCGGokwQjlquKRhSYyWLMsQJT0wh7NuM2W4tmudF4kRCa369LOaecUg6NuvP2Huh1XAgBiYpEix04zoaMucmAb4rFicK5dztKDmaPubGdI9fbPYMHgkHJKNbYk89SGLWOXQzohqRFu40ssauUDIUrvMFsU7aEarV_WYi_aS_-PGkoFfR-VmWKsq7-_eoEXGNj3yv8GCjNLu8M2Bkebe1FpS_9Ds7zXD0tNwt5hSxOtuztrnldBEy85Th9idA3HiF3b4gtv63vrL5i_e_MHt6puZi5ybkw9kUSY9fu4kLIogHVzRxvINY68sJUlMRK0MvnrbdxMXDlY-V0AeLTTVshG0lVlgmHKOHkKFh1UBI7AmyW4QDLNFkNGciSV5-2WGVWP4ebgCw=w1250-h1666-s-no?authuser=0" width=500 height=500  />
+</br>
+
+# 3. 핵심 기능
+
+스마트 미러의 화면은 5개 영역으로 나뉩니다.
+
+## 3.1 현재 시간
+
+- `react-live-clock` 라이브러리를 사용하여 현재 시간을 보여줍니다.
+
+## 3.2 메세지
+
+- 현재 위치의 `날씨`, `시간`에 따라서 Firebase에 저장된 메세지를 보여줍니다.
+
+## 3.3 현재 위치 날씨과 미세먼지 정보, 선택한 위치의 미세먼지 정보
+
+- 현재 위치의 `습도`, `자외선 세기`, `온도`, `체감 온도`와 가장 가까운 미세먼지 측정소에서 가져온 `대기질`을 보여줍니다.
+- 앱에서 선택한 대기질 측정소에서 가져온 `대기질`을 보여줍니다.
+
+## 3.4 사진 갤러리
+
+- 앱에서 선택한 사진을 최대 4개까지 스마트 미러에 보여줍니다.
+
+</br>
+
+# 4. 핵심 트러블 슈팅
+
+## 4.1 대기질 측정소 API 사용을 위해 WGS84 좌표계를 TM 좌표계로 변환
+- React Native 얻는 위도/경도는 `WGS84 좌표계 (경도 위도)`를 사용하지만 한국환경공단의 API는 `중부원점 좌표계 (TM 좌표계)`를 사용해 변환이 필요했습니다.
+- `proj4` 라이브러리를 통해서 좌표 변환 후 가장 가까운 측정소 정보를 얻고 측정소별 대기질 조회를 통해 성공적으로 대기질 정보를 얻었습니다.
+
+
+</br>
+
+# 5. [동작 화면 (🌐 앱 저장소)](https://github.com/Strongorange/newMirrorController)

@@ -1,5 +1,9 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import {
+  defaultDustDataState,
+  DustDataOthersState,
+} from "src/types/dustDataStates";
 
 const { persistAtom } = recoilPersist({
   key: "dustDataStateSession",
@@ -18,4 +22,9 @@ export const dustDataState = atom<DustDataState>({
     kimje: { airQuality: "", pm10Value: "", pm25Value: "" },
   },
   effects_UNSTABLE: [persistAtom],
+});
+
+export const dustDataOthersState = atom<DustDataOthersState>({
+  key: "dustDataOthersState",
+  default: defaultDustDataState,
 });
