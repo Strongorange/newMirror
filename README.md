@@ -73,5 +73,3 @@
 </br>
 
 # 5. [동작 화면 (🌐 앱 저장소)](https://github.com/Strongorange/newMirrorController)
-
-
