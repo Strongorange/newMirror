@@ -17,7 +17,7 @@ import SignOut from "./screens/SignOut";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <HomeOther />,
   },
   {
     path: "/homeothers",

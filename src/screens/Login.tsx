@@ -1,11 +1,14 @@
-import React, { ChangeEvent, MouseEvent, useState } from "react";
+import React, { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import * as S from "../styles/auth/auth.style";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "src/firebase";
+import { useRecoilValue } from "recoil";
+import { userState } from "src/states/userStates";
 
 const Login = () => {
   const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -36,6 +39,12 @@ const Login = () => {
       [name]: value,
     });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/homeothers");
+    }
+  }, [user, navigate]);
 
   return (
     <S.AuthLayout>

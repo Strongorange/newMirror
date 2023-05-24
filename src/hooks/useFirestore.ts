@@ -19,7 +19,7 @@ const useFirestore = () => {
     if (user) {
       const userCollectionRef = collection(firestore, user.uid!);
       const galleryDocRef = doc(userCollectionRef, "gallery");
-      const messageDocRef = doc(userCollectionRef, "message");
+      const messageDocRef = doc(userCollectionRef, "messages");
       const settingsDocRef = doc(userCollectionRef, "settings");
 
       // Firestore에서 Gallery Document를 실시간으로 감시
@@ -34,7 +34,7 @@ const useFirestore = () => {
       });
 
       // Firestore에서 Message Document를 실시간으로 감시
-      const unsubscribeMessage = onSnapshot(messageDocRef, async (doc) => {
+      const unsubscribeMessages = onSnapshot(messageDocRef, async (doc) => {
         if (doc.exists()) {
           // 해당 Document가 있을 경우 Gallery State에 저장
           setMessages(doc.data()!);
@@ -57,7 +57,7 @@ const useFirestore = () => {
 
       return () => {
         unsubscribeGallery();
-        unsubscribeMessage();
+        unsubscribeMessages();
         unscribeSettings();
       };
     } else {
