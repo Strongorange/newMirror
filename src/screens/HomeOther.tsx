@@ -6,7 +6,6 @@ import useLocation from "src/hooks/useLocation";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { forecastsState } from "src/states/forecastsStates";
 import useFirestore from "src/hooks/useFirestore";
-import useGetSGISToken from "src/hooks/useGetSGISToken";
 import {
   getDustDataByStationName,
   getDustDataByTM,
@@ -35,8 +34,6 @@ const HomeOther = () => {
   const [locations, error] = useLocation();
   // FireStore 데이터 구독
   useFirestore();
-  // SGIStoken 가져오기
-  useGetSGISToken();
 
   // functions
   const getWeatherAndDust = async () => {
