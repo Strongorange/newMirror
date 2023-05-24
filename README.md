@@ -67,10 +67,7 @@
 
 ## 4.1 대기질 측정소 API 사용을 위해 WGS84 좌표계를 TM 좌표계로 변환
 - React Native 얻는 위도/경도는 `WGS84 좌표계 (경도 위도)`를 사용하지만 한국환경공단의 API는 `중부원점 좌표계 (TM 좌표계)`를 사용해 변환이 필요했습니다.
-- [SGIS 좌표변환 API](https://sgis.kostat.go.kr/developer/html/newOpenApi/api/dataApi/coord.html#transcoord)를 이용해 `위도/경도`를 `TM 좌표계`로 변환 후 API를 호출했습니다.
-- [🌐 useLocation.ts](https://github.com/Strongorange/newMirror/blob/dev-user/src/hooks/useLocation.ts) 
-- [🌐 SGIS Token 코드](https://github.com/Strongorange/newMirror/blob/dev-user/src/hooks/useGetSGISToken.ts) 
-- [🌐 대기 측정소, 측정 데이터 코드](https://github.com/Strongorange/newMirror/blob/dev-user/src/utils/getDustData.tsx)
+- `proj4` 라이브러리를 통해서 좌표 변환 후 가장 가까운 측정소 정보를 얻고 측정소별 대기질 조회를 통해 성공적으로 대기질 정보를 얻었습니다.
 
 
 </br>
