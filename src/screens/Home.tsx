@@ -66,6 +66,14 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.reload();
+    }, 1000 * 60 * 60);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
       <S.Outter>

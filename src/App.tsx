@@ -13,13 +13,23 @@ import { useRecoilState } from "recoil";
 import { userState } from "./states/userStates";
 import HomeOther from "./screens/HomeOther";
 import SignOut from "./screens/SignOut";
+import { ErrorBoundary } from "react-error-boundary";
+import errorHandler from "./utils/errorHandler";
+import Fallback from "./components/Fallback";
 
 console.log(process.env.REACT_APP_ISRA);
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: process.env.REACT_APP_ISRA === "true" ? <Home /> : <HomeOther />,
+    element:
+      process.env.REACT_APP_ISRA === "true" ? (
+        <ErrorBoundary FallbackComponent={Fallback} onError={errorHandler}>
+          <Home />
+        </ErrorBoundary>
+      ) : (
+        <HomeOther />
+      ),
   },
   {
     path: "/homeothers",
