@@ -5,13 +5,12 @@ import React from "react";
 import { SunnyOutline, WaterOutline } from "react-ionicons";
 import { useRecoilValue } from "recoil";
 import * as S from "../../styles/WeathersDust.style";
+import { dustCityConfigs } from "../../states/dustDataStates";
 
 const WeathersDust = () => {
   const forecasts = useRecoilValue(forecastsState);
   const dustData = useRecoilValue(dustDataState);
   const currentWeather = forecasts.current;
-  const gunsanAirQuality = dustData.gunsan.airQuality;
-  const kimjeAirQuality = dustData.kimje.airQuality;
 
   return (
     <S.DustLayout>
@@ -49,12 +48,15 @@ const WeathersDust = () => {
         </S.WeatherRow>
         <S.DustInfo id="airquality">
           <S.DustRow>
-            <S.Text>
-              군산 대기질: {gunsanAirQuality} {getAirQualityIcon(gunsanAirQuality)}
-            </S.Text>
-            <S.Text>
-              김제 대기질: {kimjeAirQuality} {getAirQualityIcon(kimjeAirQuality)}
-            </S.Text>
+            {dustCityConfigs.map((city) => {
+              const airQuality = dustData[city.key].airQuality;
+
+              return (
+                <S.Text key={city.key}>
+                  {city.label} 대기질: {airQuality} {getAirQualityIcon(airQuality)}
+                </S.Text>
+              );
+            })}
           </S.DustRow>
         </S.DustInfo>
       </S.WeatherContainer>

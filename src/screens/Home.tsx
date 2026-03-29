@@ -15,6 +15,7 @@ import { galleryState } from "src/states/galleryStates";
 import { messagesState } from "src/states/messagesStates";
 import Messages from "src/components/Home/Messages";
 import { settlePromise } from "../utils/settlePromise";
+import { dustCityConfigs } from "../states/dustDataStates";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -29,11 +30,12 @@ function Home() {
     setIsLoading(true);
 
     try {
-      const [weatherResult, dustDataGunsanResult, dustDataKimjeResult] =
+      const [weatherResult, ...dustResults] =
         await Promise.all([
           settlePromise(getWeatherData()),
-          settlePromise(getDustData(true)),
-          settlePromise(getDustData(false)),
+          ...dustCityConfigs.map((city) =>
+            settlePromise(getDustData(city.stationName))
+          ),
         ]);
 
       if (weatherResult.status === "fulfilled") {
@@ -42,30 +44,25 @@ function Home() {
         console.log("날씨 데이터 가져오기에서 오류 발생 : \n", weatherResult.reason);
       }
 
-      setDustData((currentDustData) => ({
-        gunsan:
-          dustDataGunsanResult.status === "fulfilled"
-            ? dustDataGunsanResult.value
-            : currentDustData.gunsan,
-        kimje:
-          dustDataKimjeResult.status === "fulfilled"
-            ? dustDataKimjeResult.value
-            : currentDustData.kimje,
-      }));
+      setDustData((currentDustData) =>
+        dustCityConfigs.reduce((nextState, city, index) => {
+          const dustResult = dustResults[index];
 
-      if (dustDataGunsanResult.status === "rejected") {
-        console.log(
-          "군산 대기질 데이터 가져오기에서 오류 발생 : \n",
-          dustDataGunsanResult.reason
-        );
-      }
+          nextState[city.key] =
+            dustResult.status === "fulfilled"
+              ? dustResult.value
+              : currentDustData[city.key];
 
-      if (dustDataKimjeResult.status === "rejected") {
-        console.log(
-          "김제 대기질 데이터 가져오기에서 오류 발생 : \n",
-          dustDataKimjeResult.reason
-        );
-      }
+          if (dustResult.status === "rejected") {
+            console.log(
+              `${city.label} 대기질 데이터 가져오기에서 오류 발생 : \n`,
+              dustResult.reason
+            );
+          }
+
+          return nextState;
+        }, { ...currentDustData })
+      );
     } catch (error) {
       console.log("홈 초기 데이터 가져오기에서 오류 발생 : \n", error);
     } finally {

@@ -11,6 +11,7 @@ import { BsEmojiAngry } from "react-icons/bs";
 import { ImAngry } from "react-icons/im";
 import axios from "axios";
 import { NearbyStationType } from "src/types/dustDataStates";
+import { DustDataSummary } from "src/states/dustDataStates";
 
 const APIKEY = process.env.REACT_APP_DUST_APIKEY;
 
@@ -70,16 +71,18 @@ export const getAirQualityIcon = (airQuality: any) => {
 };
 
 /**
- * @param {boolean} isGunsan - true: 군산, false: 김제 요촌동
+ * @param {string} stationName - 측정소 이름
  * returns {Promise} - axios response data
  */
-export const getDustData = async (isGunsan: boolean) => {
+export const getDustData = async (
+  stationName: string
+): Promise<DustDataSummary> => {
   const response = await dustInstance.get("", {
     params: {
       serviceKey: APIKEY,
       returnType: "json",
       numOfRows: 100,
-      stationName: isGunsan ? "신풍동(군산)" : "요촌동",
+      stationName,
       dataTerm: "DAILY",
       ver: "1.4",
     },
@@ -102,29 +105,12 @@ export const getDustData = async (isGunsan: boolean) => {
  */
 export const getDustDataByStationName = async (stationName: string) => {
   if (!stationName) return;
-  const response = await dustInstance.get("", {
-    params: {
-      serviceKey: APIKEY,
-      returnType: "json",
-      numOfRows: 100,
-      stationName: stationName,
-      dataTerm: "DAILY",
-      ver: "1.4",
-    },
-  });
-  console.log(response);
-  const responseData = response.data.response.body.items[0];
-  const { pm25Value, pm10Value } = responseData;
-  const airQuality = getAirQuality(pm10Value, pm25Value);
+  const dustData = await getDustData(stationName);
 
-  const dustData = {
-    airQuality,
-    pm10Value,
-    pm25Value,
+  return {
+    ...dustData,
     stationName,
   };
-
-  return dustData;
 };
 
 /**
