@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Mirror",
+  "name": "Mirror App",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,7 @@
   ],
   "start_url": ".",
   "display": "standalone",
+  "description": "Mirror App - 당신의 디지털 미러",
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }

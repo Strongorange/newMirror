@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import {
+  isIOSDevice,
+  isStandaloneMode,
+  shouldShowIOSInstallPrompt,
+} from "../../../utils/pwa";
 
 const PWAInstallPrompt: React.FC = () => {
   const [showPrompt, setShowPrompt] = useState<boolean>(false);
@@ -7,38 +12,44 @@ const PWAInstallPrompt: React.FC = () => {
   const [isStandalone, setIsStandalone] = useState<boolean>(false);
 
   useEffect(() => {
-    // iOS 기기 확인
-    const iOS =
-      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-      (navigator.userAgent.includes("Mac") && "ontouchend" in document);
-
-    // Safari 브라우저 확인
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-    // 이미 홈 화면에 추가되었는지 확인
-    const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as any).standalone === true;
+    const hasTouchEnd = "ontouchend" in document;
+    const standalone = isStandaloneMode(
+      window.matchMedia?.("(display-mode: standalone)").matches ?? false,
+      (window.navigator as Navigator & { standalone?: boolean }).standalone
+    );
+    const iOS = isIOSDevice(navigator.userAgent, hasTouchEnd);
 
     setIsIOS(iOS);
     setIsStandalone(standalone);
 
-    // iOS Safari에서만 팝업 표시
-    if (iOS && isSafari && !standalone) {
-      // 사용자가 이전에 팝업을 닫았는지 확인
-      const closedUntil = localStorage.getItem("pwaPromptClosed");
-      const isPromptSuppressed =
-        closedUntil !== null && new Date(closedUntil).getTime() > Date.now();
-
-      if (!isPromptSuppressed) {
-        localStorage.removeItem("pwaPromptClosed");
-        // 페이지 로드 후 1초 후에 팝업 표시
-        const timer = setTimeout(() => {
-          setShowPrompt(true);
-        }, 1000);
-        return () => clearTimeout(timer);
-      }
+    if (
+      !shouldShowIOSInstallPrompt({
+        userAgent: navigator.userAgent,
+        hasTouchEnd,
+        displayModeStandalone:
+          window.matchMedia?.("(display-mode: standalone)").matches ?? false,
+        navigatorStandalone: (window.navigator as Navigator & { standalone?: boolean })
+          .standalone,
+      })
+    ) {
+      return;
     }
+
+    const closedUntil = localStorage.getItem("pwaPromptClosed");
+    const isPromptSuppressed =
+      closedUntil !== null && new Date(closedUntil).getTime() > Date.now();
+
+    if (isPromptSuppressed) {
+      return;
+    }
+
+    localStorage.removeItem("pwaPromptClosed");
+
+    const timer = setTimeout(() => {
+      setShowPrompt(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const closePrompt = () => {
@@ -55,19 +66,26 @@ const PWAInstallPrompt: React.FC = () => {
     <PromptContainer>
       <PromptContent>
         <CloseButton onClick={closePrompt}>×</CloseButton>
-        <PromptTitle>홈 화면에 추가하기</PromptTitle>
+        <PromptTitle>홈 화면에서 전체 화면으로 열기</PromptTitle>
         <PromptText>
-          더 나은 경험을 위해 Mirror 앱을 홈 화면에 추가하세요.
+          iPad Safari 탭으로 열면 주소창이 남습니다. 홈 화면에 추가한 뒤
+          홈 화면 아이콘으로 실행하면 앱처럼 더 넓게 사용할 수 있습니다.
         </PromptText>
         <InstallInstructions>
           <InstructionStep>
-            1. Safari 하단의 <ShareIcon>공유</ShareIcon> 버튼을 탭하세요.
+            1. Safari의 <ShareIcon>공유</ShareIcon> 버튼을 탭하세요.
           </InstructionStep>
           <InstructionStep>
             2. "홈 화면에 추가" 옵션을 선택하세요.
           </InstructionStep>
-          <InstructionStep>3. "추가"를 탭하세요.</InstructionStep>
+          <InstructionStep>
+            3. 홈 화면에 생긴 Mirror 아이콘으로 앱을 실행하세요.
+          </InstructionStep>
         </InstallInstructions>
+        <PromptNote>
+          Safari 탭이나 최근 방문 목록으로 다시 열면 주소창이 다시 보일 수
+          있습니다.
+        </PromptNote>
       </PromptContent>
     </PromptContainer>
   );
@@ -133,6 +151,13 @@ const InstructionStep = styled.p`
   font-size: 14px;
   margin-bottom: 8px;
   color: #333;
+`;
+
+const PromptNote = styled.p`
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #666;
 `;
 
 const ShareIcon = styled.span`
