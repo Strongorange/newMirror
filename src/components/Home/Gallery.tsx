@@ -5,21 +5,15 @@ import * as S from "../../styles/Gallery.style";
 
 const Gallery = () => {
   const gallery = useRecoilValue(galleryState);
+  const gallerySlots = Array.from({ length: 4 }, (_, index) => gallery[index]);
 
   return (
     <S.GalleryLayout>
-      <S.PhotoBox>
-        <S.PhotoItem src={gallery![0]} />
-      </S.PhotoBox>
-      <S.PhotoBox>
-        <S.PhotoItem src={gallery![1]} />
-      </S.PhotoBox>
-      <S.PhotoBox>
-        <S.PhotoItem src={gallery![2]} />
-      </S.PhotoBox>
-      <S.PhotoBox>
-        <S.PhotoItem src={gallery![3]} />
-      </S.PhotoBox>
+      {gallerySlots.map((photo, index) => (
+        <S.PhotoBox key={index}>
+          {photo ? <S.PhotoItem src={photo} alt={`mirror-gallery-${index}`} /> : null}
+        </S.PhotoBox>
+      ))}
     </S.GalleryLayout>
   );
 };

@@ -16,6 +16,7 @@ import SignOut from "./screens/SignOut";
 import { ErrorBoundary } from "react-error-boundary";
 import errorHandler from "./utils/errorHandler";
 import Fallback from "./components/Fallback";
+import PWAInstallPrompt from "./components/Home/Others/PWAInstallPrompt";
 
 console.log(process.env.REACT_APP_ISRA);
 
@@ -51,7 +52,7 @@ const router = createBrowserRouter([
 
 const App = () => {
   // Firebase Auth 파트
-  const [user, setUserState] = useRecoilState(userState);
+  const [, setUserState] = useRecoilState(userState);
 
   useEffect(() => {
     // 로그인 상태 관리, 로그인한 유저의 정보를 저장, 로그아웃 시 null
@@ -73,9 +74,14 @@ const App = () => {
     return () => {
       userInfoUnsubscribe();
     };
-  }, []);
+  }, [setUserState]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+      <PWAInstallPrompt />
+    </>
+  );
 };
 
 export default App;

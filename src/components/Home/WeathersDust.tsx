@@ -9,6 +9,9 @@ import * as S from "../../styles/WeathersDust.style";
 const WeathersDust = () => {
   const forecasts = useRecoilValue(forecastsState);
   const dustData = useRecoilValue(dustDataState);
+  const currentWeather = forecasts.current;
+  const gunsanAirQuality = dustData.gunsan.airQuality;
+  const kimjeAirQuality = dustData.kimje.airQuality;
 
   return (
     <S.DustLayout>
@@ -16,7 +19,7 @@ const WeathersDust = () => {
         <S.WeatherRow>
           <S.WeatherItem>
             <WaterOutline color={"#ababc8"} height="25px" width="25px" />
-            <S.Text>{`${forecasts!.current!.humidity}`}%</S.Text>
+            <S.Text>{`${currentWeather?.humidity ?? "-"}`}%</S.Text>
           </S.WeatherItem>
           <S.WeatherItem>
             <SunnyOutline
@@ -25,34 +28,32 @@ const WeathersDust = () => {
               height="30px"
               width="35px"
             />
-            <S.Text>{` ${forecasts!.current!.uvi}`}</S.Text>
+            <S.Text>{` ${currentWeather?.uvi ?? "-"}`}</S.Text>
           </S.WeatherItem>
         </S.WeatherRow>
         <S.WeatherRow>
           <S.WeatherItem>
             <S.WeatherIcon
               src={`http://openweathermap.org/img/wn/${
-                forecasts.current!.weather[0].icon
+                currentWeather?.weather?.[0]?.icon ?? "01d"
               }@2x.png`}
             />
-            <S.Text>{`${forecasts.current!.temp}°C`}</S.Text>
+            <S.Text>{`${currentWeather?.temp ?? "-"}°C`}</S.Text>
           </S.WeatherItem>
         </S.WeatherRow>
         <S.WeatherRow>
           <S.WeatherItem>
             <S.Text>체감온도</S.Text>
-            <S.Text>{`${forecasts.current!.feels_like}°C`}</S.Text>
+            <S.Text>{`${currentWeather?.feels_like ?? "-"}°C`}</S.Text>
           </S.WeatherItem>
         </S.WeatherRow>
         <S.DustInfo id="airquality">
           <S.DustRow>
             <S.Text>
-              군산 대기질: {dustData.gunsan.airQuality}{" "}
-              {getAirQualityIcon(dustData.gunsan.airQuality)}
+              군산 대기질: {gunsanAirQuality} {getAirQualityIcon(gunsanAirQuality)}
             </S.Text>
             <S.Text>
-              김제 대기질: {dustData.kimje.airQuality}{" "}
-              {getAirQualityIcon(dustData.gunsan.airQuality)}
+              김제 대기질: {kimjeAirQuality} {getAirQualityIcon(kimjeAirQuality)}
             </S.Text>
           </S.DustRow>
         </S.DustInfo>

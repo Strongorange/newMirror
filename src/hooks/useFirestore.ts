@@ -64,7 +64,7 @@ const useFirestore = () => {
       console.log("Firebase 유저 정보 없음");
       return;
     }
-  }, []);
+  }, [setGallery, setMessages, setSettings, user]);
 };
 
 export default useFirestore;

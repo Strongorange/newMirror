@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { firestore } from "../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import * as S from "../styles/App.style";
@@ -24,47 +24,72 @@ function Home() {
 
   useSaveUserAgentWidthHeight();
 
-  const getWeatherAndDust = async () => {
+  const getWeatherAndDust = useCallback(async () => {
     setIsLoading(true);
 
-    try {
-      const weatherDataPromise = getWeatherData();
-      const dustDataGunsanPromise = getDustData(true);
-      const dustDataKimjePromise = getDustData(false);
-
-      const [weatherData, dustDataGunsan, dustDataKimje] = await Promise.all([
-        weatherDataPromise,
-        dustDataGunsanPromise,
-        dustDataKimjePromise,
+    const [weatherResult, dustDataGunsanResult, dustDataKimjeResult] =
+      await Promise.allSettled([
+        getWeatherData(),
+        getDustData(true),
+        getDustData(false),
       ]);
 
-      setForecasts(weatherData);
-      setDustData({
-        gunsan: dustDataGunsan,
-        kimje: dustDataKimje,
-      });
-    } catch (error) {
-      console.log("날씨, 먼지 데이터 가져오기에서 오류 발생 : \n", error);
-    } finally {
-      setTimeout(() => setIsLoading(false), 500);
+    if (weatherResult.status === "fulfilled") {
+      setForecasts(weatherResult.value);
+    } else {
+      console.log("날씨 데이터 가져오기에서 오류 발생 : \n", weatherResult.reason);
     }
-  };
+
+    setDustData((currentDustData) => ({
+      gunsan:
+        dustDataGunsanResult.status === "fulfilled"
+          ? dustDataGunsanResult.value
+          : currentDustData.gunsan,
+      kimje:
+        dustDataKimjeResult.status === "fulfilled"
+          ? dustDataKimjeResult.value
+          : currentDustData.kimje,
+    }));
+
+    if (dustDataGunsanResult.status === "rejected") {
+      console.log(
+        "군산 대기질 데이터 가져오기에서 오류 발생 : \n",
+        dustDataGunsanResult.reason
+      );
+    }
+
+    if (dustDataKimjeResult.status === "rejected") {
+      console.log(
+        "김제 대기질 데이터 가져오기에서 오류 발생 : \n",
+        dustDataKimjeResult.reason
+      );
+    }
+
+    setTimeout(() => setIsLoading(false), 500);
+  }, [setDustData, setForecasts]);
 
   useEffect(() => {
-    onSnapshot(doc(firestore, "mirror", "message"), (doc) => {
+    const unsubscribeMessages = onSnapshot(doc(firestore, "mirror", "message"), (doc) => {
       const data = doc.data();
       data && setMessages(data);
     });
 
-    onSnapshot(doc(firestore, "mirror", "gallery"), (doc) => {
-      setGallery(doc.data()!.photos);
-    });
+    const unsubscribeGallery = onSnapshot(
+      doc(firestore, "mirror", "gallery"),
+      (doc) => {
+        setGallery(doc.data()?.photos ?? []);
+      }
+    );
 
     getWeatherAndDust();
-    let interval = setInterval(() => getWeatherAndDust(), 1800000);
+    const interval = setInterval(() => getWeatherAndDust(), 1800000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      unsubscribeMessages();
+      unsubscribeGallery();
+      clearInterval(interval);
+    };
+  }, [getWeatherAndDust, setGallery, setMessages]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
