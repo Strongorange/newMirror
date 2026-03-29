@@ -27,9 +27,11 @@ export const Text = styled.span``;
 
 export const GridContainer = styled.div`
   display: grid;
+  flex: 1;
   width: 100%;
-  height: 100%;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  height: auto;
+  min-height: 0;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
   color: rgba(255, 255, 255, 0.8);
 `;
