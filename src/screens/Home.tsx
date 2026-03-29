@@ -14,6 +14,7 @@ import Gallery from "src/components/Home/Gallery";
 import { galleryState } from "src/states/galleryStates";
 import { messagesState } from "src/states/messagesStates";
 import Messages from "src/components/Home/Messages";
+import { settlePromise } from "../utils/settlePromise";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,45 +28,49 @@ function Home() {
   const getWeatherAndDust = useCallback(async () => {
     setIsLoading(true);
 
-    const [weatherResult, dustDataGunsanResult, dustDataKimjeResult] =
-      await Promise.allSettled([
-        getWeatherData(),
-        getDustData(true),
-        getDustData(false),
-      ]);
+    try {
+      const [weatherResult, dustDataGunsanResult, dustDataKimjeResult] =
+        await Promise.all([
+          settlePromise(getWeatherData()),
+          settlePromise(getDustData(true)),
+          settlePromise(getDustData(false)),
+        ]);
 
-    if (weatherResult.status === "fulfilled") {
-      setForecasts(weatherResult.value);
-    } else {
-      console.log("날씨 데이터 가져오기에서 오류 발생 : \n", weatherResult.reason);
+      if (weatherResult.status === "fulfilled") {
+        setForecasts(weatherResult.value);
+      } else {
+        console.log("날씨 데이터 가져오기에서 오류 발생 : \n", weatherResult.reason);
+      }
+
+      setDustData((currentDustData) => ({
+        gunsan:
+          dustDataGunsanResult.status === "fulfilled"
+            ? dustDataGunsanResult.value
+            : currentDustData.gunsan,
+        kimje:
+          dustDataKimjeResult.status === "fulfilled"
+            ? dustDataKimjeResult.value
+            : currentDustData.kimje,
+      }));
+
+      if (dustDataGunsanResult.status === "rejected") {
+        console.log(
+          "군산 대기질 데이터 가져오기에서 오류 발생 : \n",
+          dustDataGunsanResult.reason
+        );
+      }
+
+      if (dustDataKimjeResult.status === "rejected") {
+        console.log(
+          "김제 대기질 데이터 가져오기에서 오류 발생 : \n",
+          dustDataKimjeResult.reason
+        );
+      }
+    } catch (error) {
+      console.log("홈 초기 데이터 가져오기에서 오류 발생 : \n", error);
+    } finally {
+      setTimeout(() => setIsLoading(false), 500);
     }
-
-    setDustData((currentDustData) => ({
-      gunsan:
-        dustDataGunsanResult.status === "fulfilled"
-          ? dustDataGunsanResult.value
-          : currentDustData.gunsan,
-      kimje:
-        dustDataKimjeResult.status === "fulfilled"
-          ? dustDataKimjeResult.value
-          : currentDustData.kimje,
-    }));
-
-    if (dustDataGunsanResult.status === "rejected") {
-      console.log(
-        "군산 대기질 데이터 가져오기에서 오류 발생 : \n",
-        dustDataGunsanResult.reason
-      );
-    }
-
-    if (dustDataKimjeResult.status === "rejected") {
-      console.log(
-        "김제 대기질 데이터 가져오기에서 오류 발생 : \n",
-        dustDataKimjeResult.reason
-      );
-    }
-
-    setTimeout(() => setIsLoading(false), 500);
   }, [setDustData, setForecasts]);
 
   useEffect(() => {
