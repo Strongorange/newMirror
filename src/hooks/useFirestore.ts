@@ -8,6 +8,10 @@ import { defaultMessages } from "src/types/messagesTypes";
 import { messagesState } from "src/states/messagesStates";
 import { defaultSettings, Settings } from "src/types/settingsTypes";
 import { firebaseSettingsState } from "src/states/firebaseSettingStates";
+import {
+  createMirrorGalleryDoc,
+  sanitizeMirrorGallerySlots,
+} from "src/types/mediaTypes";
 
 const useFirestore = () => {
   const setGallery = useSetRecoilState(galleryState);
@@ -24,12 +28,11 @@ const useFirestore = () => {
 
       // Firestore에서 Gallery Document를 실시간으로 감시
       const unsubscribeGallery = onSnapshot(galleryDocRef, async (doc) => {
-        if (doc.exists()) {
-          // 해당 Document가 있을 경우 Gallery State에 저장
-          setGallery(doc.data().photos);
+        if (doc.exists() && doc.data()?.schemaVersion === 2) {
+          setGallery(sanitizeMirrorGallerySlots(doc.data()?.slots));
         } else {
-          // 해당 Document가 없을 경우 Firestore에 Document를 생성
-          await setDoc(galleryDocRef, { photos: [] });
+          setGallery(createMirrorGalleryDoc().slots);
+          await setDoc(galleryDocRef, createMirrorGalleryDoc());
         }
       });
 

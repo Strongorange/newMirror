@@ -1,15 +1,16 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { createEmptyGallerySlots, MirrorGallerySlots } from "src/types/mediaTypes";
 
 const { persistAtom } = recoilPersist({
   key: "galleryStateSession",
   storage: sessionStorage,
 });
 
-export type GalleryState = string[];
+export type GalleryState = MirrorGallerySlots;
 
 export const galleryState = atom<GalleryState>({
   key: "galleryState",
-  default: [],
+  default: createEmptyGallerySlots(),
   effects_UNSTABLE: [persistAtom],
 });

@@ -16,6 +16,7 @@ import { messagesState } from "src/states/messagesStates";
 import Messages from "src/components/Home/Messages";
 import { settlePromise } from "../utils/settlePromise";
 import { dustCityConfigs } from "../states/dustDataStates";
+import { sanitizeMirrorGallerySlots } from "src/types/mediaTypes";
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +80,7 @@ function Home() {
     const unsubscribeGallery = onSnapshot(
       doc(firestore, "mirror", "gallery"),
       (doc) => {
-        setGallery(doc.data()?.photos ?? []);
+        setGallery(sanitizeMirrorGallerySlots(doc.data()?.slots));
       }
     );
 

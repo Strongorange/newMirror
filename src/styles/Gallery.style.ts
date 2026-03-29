@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 // App.style.ts 의 그리드 아이템
 export const GalleryLayout = styled.div`
@@ -27,9 +27,17 @@ export const PhotoBox = styled.div`
   }
 `;
 
-export const PhotoItem = styled.img`
+const mediaStyles = css`
   position: absolute;
   width: 100%;
   height: 100%;
   object-fit: cover;
+`;
+
+export const PhotoItem = styled.img`
+  ${mediaStyles}
+`;
+
+export const VideoItem = styled.video`
+  ${mediaStyles}
 `;
